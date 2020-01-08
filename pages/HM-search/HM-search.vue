@@ -1,9 +1,7 @@
 <template>
 	<view class="content">
 		<view class="search-box">
-
 			<mSearch class="mSearch-input-box" :mode="2" button="inside" :placeholder="defaultKeyword" @search="doSearch(false)" @input="inputChange" @confirm="doSearch(false)" v-model="keyword"></mSearch>
-
 		</view>
 		<view class="search-keyword" @touchstart="blur">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>

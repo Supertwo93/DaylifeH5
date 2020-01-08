@@ -66,7 +66,7 @@ export default {
 			}	
 		},
 		fixOne(value){
-			return parseInt(value/1000).toFixed(1)
+			return parseInt(value/1000).toFixed(1) + 'km'
 		}
 	},
 	computed:{
@@ -89,7 +89,7 @@ export default {
 				latitude:'',
 				longitude:'',
 				goodsSecondtype:'',
-				sort:1
+				sort:5
 			},
 			data:'',
 			type:'',

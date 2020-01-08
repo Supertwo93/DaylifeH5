@@ -15,6 +15,20 @@
 			}
 		},
 		{
+			"path": "pages/HM-search/searchSeller",
+			"style": {
+				"navigationBarTitleText": "店铺搜索",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path":"pages/HM-search/searchSellerFinal",
+			"style":{
+				"navigationBarTitleText":"店铺搜索",
+				"navigationBarBackgroundColor":"#FFF"
+			}
+		},
+		{
 			"path": "pages/HM-search/HM-search",
 			"style": {
 				"navigationBarTitleText": "搜索"
@@ -54,6 +68,17 @@
 				"navigationBarTitleText": "聊天",
 				"app-plus":{
 					"softinputNavBar":"none",
+					"bounce":"none"
+				}
+			}
+		},
+		{
+			"path": "pages/nearby/nearbyMap",
+			"style": {
+				"navigationBarTitleText": "附近",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
 					"bounce":"none"
 				}
 			}
@@ -296,8 +321,7 @@
 		{
 		    "path" : "pages/wallet/points",
 		    "style" : {
-				"navigationBarTitleText": "我的积分",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationStyle":"custom"
 			}
 		},
 		{
@@ -844,6 +868,48 @@
 		    "path" : "pages/VIPCard/setting",
 		    "style" : {
 				"navigationBarTitleText": "会员卡设置",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/user/card/flowList",
+		    "style" : {
+				"navigationBarTitleText": "消费流水记录",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/user/card/flowDetail",
+		    "style" : {
+				"navigationBarTitleText": "消费流水详情",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/card/pointRecord",
+			"style" : {
+				"navigationBarTitleText": "积分记录",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/card/pointRule",
+			"style" : {
+				"navigationBarTitleText": "积分规则",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/card/cardCharge",
+			"style" : {
+				"navigationBarTitleText": "会员充值",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/settings/privacy",
+			"style" : {
+				"navigationBarTitleText": "隐私政策",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}

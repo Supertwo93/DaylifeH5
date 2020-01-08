@@ -11,10 +11,11 @@ class CheckModel extends HTTP {
 	  this.request(params)
 	}
 	
-	getSignSelect(success){
+	getSignSelect(data,success){
 	  let params = {
 		method:"POST",
 		url:"/app/usersign/signPageFind",
+		data:data,
 		success:success
 	  }
 	  this.request(params)

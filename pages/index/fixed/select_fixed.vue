@@ -21,15 +21,15 @@
 				<view class="scroll_title">我的收获地址</view>
 				<view class="scroll_item_box">
 					<view class="scroll_item" v-for="(mine,idx) in my_address" :key="idx">
-						<view class="si_title">{{mine.title}}</view>
-						<view class="si_info">{{mine.name}}<text>{{mine.phone}}</text></view>
+						<view class="si_title">{{mine.receiverAddress}}</view>
+						<view class="si_info">{{mine.receiverName}}<text>{{mine.receiverPhone}}</text></view>
 					</view>
 				</view>
 				<view class="scroll_title">附近地址</view>
 				<view class="scroll_item_box">
 					<view class="scroll_item" v-for="(item,index) in near_address" :key="index">
-						<view class="si_title">{{item.title}}</view>
-						<view class="si_info">{{item.name}}<text>{{item.phone}}</text></view>
+						<view class="si_title">{{item.name}}</view>
+						<view class="si_info">{{item.addr}}<text>{{item.phone}}</text></view>
 					</view>
 				</view>
 			</view>
@@ -40,7 +40,10 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import mpvueCityPicker from '../../../components/mpvue-citypicker/mpvueCityPicker.vue'
+import {IndexModel} from '@/common/models/index.js'
+const indexmodel = new IndexModel()
 export default{
 	data(){
 		return{
@@ -51,21 +54,45 @@ export default{
 			pickerText: '北京',
 			fixed_txt: '志联佳大厦',
 			my_address: [
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
 			],
 			near_address: [
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
-				{title: '志联佳大厦 10楼1012',name: '刘先生',phone: '13765971243'},
-			]
+				
+			],
+			nearbyQuery:{
+				ak:'HxzxzR81OgNB9Z1izacsQMeq4A9Ii0ck',
+				output:'json',
+				coordtype:'wgs84ll',
+				location:'',
+				extensions_poi:1
+			}
 		}
+	},
+	onLoad(){
+		this.nearbyQuery.location = this.lat + ',' + this.lon
+		this.getNearbyList()
+		this.getReceiveAddress()
+	},
+	computed:{
+		...mapState(['lat','lon'])
 	},
 	components: {
 		mpvueCityPicker
 	},
 	methods:{
+		getNearbyList(){
+			uni.request({
+				url:'http://api.map.baidu.com/reverse_geocoding/v3/',
+				data:this.nearbyQuery,
+				success: (res) => {
+					this.near_address = res.data.result.pois
+				}
+			})
+		},
+		getReceiveAddress(){
+			indexmodel.getReceiveAddress(data=>{
+				this.my_address = data
+			})
+		},
 		// 三级联动选择
 		showMulLinkageThreePicker() {
 			this.$refs.mpvueCityPicker.show()
@@ -78,6 +105,7 @@ export default{
 		onConfirm(data){
 			console.log(data);
 			this.pickerText = data.label.split('-')[0];
+			console.log(this.pickerText)
 		}
 	}
 }
@@ -91,13 +119,13 @@ export default{
 		box-sizing: border-box;
 		background-color: #FFFFFF;
 		.top-Location{
-			max-width: 142rpx;
+			max-width: 160rpx;
 			color: #646464;
 			display: flex;
 			align-items: center;
 			font-size:26rpx;
 			text{
-				max-width: 100rpx;
+				max-width: 120rpx;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;

@@ -1,15 +1,22 @@
 <template>
+	
+	
 	<view>
+		<view class="topTabBar" :style="{position:headerPosition,top:headerTop}">
+			<view class="grid" v-for="(grid,tbIndex) in cashType" :key="tbIndex" @tap="showType(tbIndex)" >
+				<view class="text" :class="[tbIndex==tabbarIndex?'on':'']">{{grid}}</view>
+			</view>
+		</view>
 		<view class="detailList">
-			<view v-for="(item,index) in detailList.data" :key="index" class="item">
+			<view v-for="(item,index) in detailList" :key="index" class="item">
 				<view class="left">
-					<view class="title">{{reason[item.REASON]}}</view>
-					<view class="time">{{item.CREATE_TIME}}</view>
+					<view class="title">{{reason[item.reason]}}</view>
+					<view class="time">{{item.createTime}}</view>
 				</view>
 				<view class="right">
-					<view v-if="item.TYPE==2">+</view>
-					<view v-if="item.TYPE==1">-</view>
-					<view>{{item.MONEY}}</view>
+					<view v-if="item.type==2">+</view>
+					<view v-if="item.type==1">-</view>
+					<view>{{item.money}}</view>
 				</view>
 			</view>
 		</view>
@@ -17,9 +24,15 @@
 </template>
 
 <script>
+	import {UserModel} from '@/common/models/user.js'
+	const usermodel = new UserModel()
 	export default{
 		data(){
 			return{
+				headerPosition:"fixed",
+				headerTop:"43px",
+				cashType: ['全部','收入','支出'],
+				tabbarIndex:0,
 				type:{
 					1:'收入',
 					2:'支出'
@@ -41,122 +54,39 @@
 					17:'积分兑换收入',
 					18:'预约金退款',
 				},
-				detailList:{
-					"data": [
-						{
-							"CREATE_TIME": "2019-09-30 09:51:30",
-							"FLOW_NO": "20190930095130958",
-							"MONEY": 0.01,
-							"PAY_WAY": 2,
-							"REASON": 2,
-							"STATUS": 1,
-							"TYPE": 1,
-							"USERCASHFLOW_ID": "9cf7eca5d0c34d2b941448b9c63fa5b0",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-26 15:40:47",
-							"FLOW_NO": "20190926154047587",
-							"MONEY": 0.01,
-							"PAY_WAY": 2,
-							"REASON": 2,
-							"STATUS": 1,
-							"TYPE": 1,
-							"USERCASHFLOW_ID": "523058458b574fde8063962b6dfd3f94",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-26 09:20:10",
-							"FLOW_NO": "20190926092010554",
-							"MONEY": 0.02,
-							"PAY_WAY": 2,
-							"REASON": 2,
-							"STATUS": 1,
-							"TYPE": 1,
-							"USERCASHFLOW_ID": "d42d09fa299a45c79885056bb5cd2543",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-26 09:18:04",
-							"FLOW_NO": "20190926091804957",
-							"MONEY": 2.0,
-							"PAY_WAY": 3,
-							"REASON": 11,
-							"STATUS": 1,
-							"TYPE": 2,
-							"USERCASHFLOW_ID": "25eb4e3c561e41fea7fe7f0dd508ccd4",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-25 16:01:52",
-							"FLOW_NO": "20190925160152858",
-							"MONEY": 0.01,
-							"PAY_WAY": 2,
-							"REASON": 2,
-							"STATUS": 1,
-							"TYPE": 1,
-							"USERCASHFLOW_ID": "498a771d4f5c4293b4726475173021b9",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-25 16:00:48",
-							"FLOW_NO": "20190925160048897",
-							"MONEY": 0.01,
-							"PAY_WAY": 2,
-							"REASON": 2,
-							"STATUS": 1,
-							"TYPE": 1,
-							"USERCASHFLOW_ID": "67576cb0286549b9bd16a24dc6b9d0a1",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-25 15:33:43",
-							"FLOW_NO": "20190925153343822",
-							"MONEY": 1.1,
-							"PAY_WAY": 3,
-							"REASON": 11,
-							"STATUS": 1,
-							"TYPE": 2,
-							"USERCASHFLOW_ID": "82aeae3367a641c0bff3988d346f22b7",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-25 15:28:32",
-							"FLOW_NO": "20190925152832247",
-							"MONEY": 1.1,
-							"PAY_WAY": 3,
-							"REASON": 11,
-							"STATUS": 1,
-							"TYPE": 2,
-							"USERCASHFLOW_ID": "bdafe6ce3f2146d19cb3c49534313e8b",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-25 15:16:01",
-							"FLOW_NO": "20190925151601598",
-							"MONEY": 1.1,
-							"PAY_WAY": 3,
-							"REASON": 11,
-							"STATUS": 1,
-							"TYPE": 2,
-							"USERCASHFLOW_ID": "eef3a816ab384df2a47e84c458b51f41",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						},
-						{
-							"CREATE_TIME": "2019-09-23 18:41:25",
-							"FLOW_NO": "20190923184125114",
-							"MONEY": 2.0,
-							"PAY_WAY": 3,
-							"REASON": 11,
-							"STATUS": 1,
-							"TYPE": 2,
-							"USERCASHFLOW_ID": "340d4a693b3d4eed9938b11d0dad5d69",
-							"USER_ID": "3547eb6de8644dd1a6557968df41bc83"
-						}
-					],
-					"message": "查询成功",
-					"resultCode": "01"
+				detailList:[],
+				queryInfo:{
+					pageNo:1,
+					pageSize:10,
+					type:''
 				}
+			}
+		},
+		onLoad(){
+			this.getList()
+		},
+		onReachBottom(){
+			this.pageNo += 1
+			this.getList()
+		},
+		methods:{
+			getList(){
+				usermodel.getUserCashFlow(this.queryInfo,data=>{
+					if(this.pageNo = 1){
+						this.detailList = data
+					}else{
+						this.detailList = this.detailList.concat(data)
+					}	
+				})
+			},
+			showType(tbIndex){
+				this.tabbarIndex = tbIndex
+				if(tbIndex === 0){
+					this.queryInfo.type = ''
+				}else{
+					this.queryInfo.type = tbIndex
+				}
+				this.getList()
 			}
 		}
 	}
@@ -167,7 +97,40 @@ page{
 	background-color: #f2f2f2;
 }
 
+.topTabBar{
+	position:fixed;
+	z-index: 10;
+	top:0;
+	width:100%;
+	height:64rpx;
+	background-color: #fff;
+	display: flex;
+	justify-content: space-around;
+	border-top:1rpx solid #f2f2f2;
+	.grid{
+		width:20%;
+		height:64rpx;
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		color:#787878;
+		font-size:24rpx;
+		.text{
+			height:62rpx;
+			display: flex;
+			align-items: center;
+			&.on{
+				color:#FF6600;
+				border-bottom: solid 2rpx #FF6600;
+			}
+		}
+	}
+}
+
+
+
 .detailList{
+	margin-top: 64rpx;
 	background-color: #fff;
 	width:100%;
 	padding-left: 20rpx;
@@ -177,18 +140,18 @@ page{
 		border-bottom: 1rpx solid #f2f2f2;
 		display: flex;
 		justify-content: space-between;
+		padding: 20rpx 0 0 20rpx;
 		.left{
-			padding-top: 30rpx;
-			padding-left: 20rpx;
 			.title{
 				font-size:28rpx;
+				font-weight: bolder;
 				font-family:Source Han Sans CN;
 				font-weight:400;
 				color:rgba(60,60,60,1);
 			}
 			.time{
-				margin-top:20rpx;
-				font-size:22rpx;
+				margin-top:10rpx;
+				font-size:26rpx;
 				font-family:Source Han Sans CN;
 				font-weight:400;
 				color:rgba(160,160,160,1);

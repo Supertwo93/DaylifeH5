@@ -10,10 +10,10 @@
 				<view></view>
 			</view>
 			<view class="accountTitle">账户总余额(元)</view>
-			<view class="account">218.00</view>
+			<view class="account">{{money}}</view>
 		</view>
 		
-		<view class="middleContainer">
+<!-- 		<view class="middleContainer">
 			<view class="cash">
 				<view class="title">可提现余额</view>
 				<view class="number">200.00</view>
@@ -23,7 +23,7 @@
 				<view class="title">不可提现余额</view>
 				<view class="number">18.00</view>
 			</view>
-		</view>
+		</view> -->
 		
 		<view class="detail" @tap="accontDetail()">
 			<view class="detailName">收支明细</view>
@@ -36,7 +36,21 @@
 </template>
 
 <script>
+import {UserModel} from '@/common/models/user.js'
+const usermodel = new UserModel()
 export default{
+	data(){
+		return{
+			data:'',
+			money:''
+		}
+	},
+	onLoad(){
+		usermodel.getInfo(data=>{
+			this.data = data
+			this.money = (data.withdrawYuMoney + data.rewardMoney).toFixed(2);
+		})
+	},
 	methods:{
 		charge(){
 			uni.navigateTo({
@@ -67,10 +81,10 @@ page{
 	background-color: #f2f2f2;
 }
 .topContainer{
-	height:480rpx;
+	height:450rpx;
 	background:linear-gradient(-90deg,rgba(255,143,108,1),rgba(255,104,148,1));
 	.navigationBar{
-		height:150rpx;
+		height:120rpx;
 		display: flex;
 		align-items:center;
 		image{

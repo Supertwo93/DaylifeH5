@@ -2,7 +2,7 @@
 	<view>
 		<view class="top">
 			<view class="top-search" @click="clicksearch">
-				<view>
+				<view style="display: flex; align-items: center;">
 					<image class="lf" src="/static/cut/ss.png" mode=""></image>
 					<text>搜索标题</text>
 				</view>
@@ -27,7 +27,7 @@
 		methods:{
 			clicksearch () {
 				uni.navigateTo({
-					url: '/pages/HM-search/HM-search' + this.firsttype
+					url: '/pages/HM-search/HM-search?type=' + this.firsttype
 				});
 			}
 		}

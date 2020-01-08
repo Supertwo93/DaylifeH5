@@ -9,8 +9,8 @@
 				平台介绍
 				<view class="iconfont icon-dibudaohanglan-"></view>
 			</view>
-			<view class="container none">
-				给我们评分
+			<view class="container" @tap="toPrivacy()">
+				隐私协议
 				<view class="iconfont icon-dibudaohanglan-"></view>
 			</view>
 		</view>
@@ -28,6 +28,11 @@ export default{
 		toIntroduction(){
 			uni.navigateTo({
 				url:'introduction'
+			})
+		},
+		toPrivacy(){
+			uni.navigateTo({
+				url:'privacy'
 			})
 		}
 	}

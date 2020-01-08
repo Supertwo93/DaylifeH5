@@ -1,341 +1,392 @@
 <template>
 	<view>
-		<!-- <view class="status_bar">  
-		    <view class="top_view"></view>  
-		</view> -->
-		<!-- <view class="place"></view> -->
-		<view class="near_header">
-			<image src="../../static/cut/ss.png" mode=""></image>
-			附近
-			<image :src="show_icon" @tap="changeShow()" mode=""></image>
+		<view class="top-header">
+			<image @tap="toSearch" class="searchImg" src="/static/cut/ss.png"></image>
+			<view>附近</view>
+			<image class="mapImg" @tap="toNearbyMap" src="/static/cut/icon--map.png"></image>
 		</view>
-		<!-- <view class="list_nav">
-			<view v-for="(item,index) in navbar" :key="index" :class="[currentTab==index ? 'active' : '']" @click="navbarTap(index)">{{item.name}}</view>
-		</view> -->
-		<scroll-view class="scroll_nav_box" scroll-x="true">
-			<view class="scroll_nav_item" @tap="clickNav(idx)" :class="[navActive==idx?'active':'']" v-for="(nav,idx) in nav_list" :key="idx">
-				<image :src="nav.coverImg" mode="widthFix"></image>
-				<text>{{nav.title}}</text>
+		<view class="scroll">
+			<scroll-view class="scroll_nav_box" scroll-x="true">
+				<view class="scroll_nav_item" @tap="clickNav(nav)" :class="[queryInfo.firsttypeId==nav.id?'active':'']" v-for="(nav,idx) in iconList" :key="nav.id">
+					<image :src="nav.url" mode="widthFix"></image>
+					<text>{{nav.name}}</text>
+				</view>
+			</scroll-view>
+			<view class="line"></view>
+			<view class="filter" @tap="filter()">
+				<view>筛选</view>
+				<image src="/static/cut/filter_icon.png"></image>
 			</view>
-		</scroll-view>
-		<!-- 地图 -->
-		<view class="map_box" v-if="isMap == true">
-			<cover-view>
-				 <!-- :controls="controls" -->
-			<map id="mapId" style="width: 750rpx; height: 72vh" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" show-location></map>
-			</cover-view>
 		</view>
-		<!-- 列表 -->
-		<view class="map_list_box" v-else>
-			<scroll-view scroll-y="true" style="height: 66vh" @scrolltolower="loadMoreList()">
-				<view class="map_list_item" v-for="(list,index) in map_list" :key="index">
-					<image :src="list.img" mode="widthFix" class="left_img"></image>
-					<view class="mlist_center">
-						<view class="mc_title">{{list.title}}</view>
-						<view class="mc_info">￥<view>{{list.price}}</view><text>月售{{list.sales}}</text><text>配送费￥{{list.fee}}</text></view>
-					</view>
-					<view class="mlist_right">
-						<text>{{list.away}}km</text>
-						<image src="/static/cut/car.png" mode=""></image>
+		
+		<view v-for="(item,index) in list" :key="index" class="item" @tap="toStore(item)">
+			<image class="storeImg" :src="item.logoPic"></image>
+			<view class="content">
+				<view class="top">
+					<view class="title">{{item.nickName}}</view>
+					<view class="distance">{{item.distance|disFilter}}km</view>
+				</view>
+				<view class="middle">
+					<image src="/static/cut/star_on.png"></image>
+					<view>评分{{item.mainScore.toFixed(1)}}</view>
+				</view>
+				<view class="bottom">
+					<view class="gray">月售{{item.monthlySale}}</view>
+					<view class="gray">商品数量{{item.goodsCount}}</view>
+					<view class="toStore">
+						<view>进店看看</view>
+						<image src="/static/cut/right_orange.png"></image>
 					</view>
 				</view>
-				<uni-load-more :status="loadingType"></uni-load-more>
-			</scroll-view>
+			</view>
 		</view>
+		<uni-popup ref="poptop" type="top" style="margin-top:88rpx;">
+			<view class="filterTop">
+				<view class="title">服务商</view>
+				<view class="labelBox">
+					<view class="label" @tap="chooseProveide(item,index)" :class="provideIndex==index?'active':''" v-for="(item,index) in providerOptions" :key="index">{{item.name}}</view>
+				</view>
+			</view>
+			<view class="filterTop">
+				<view class="title">排序</view>
+				<view class="labelBox">
+					<view class="label" @tap="chooseSort(item,index)" :class="sortIndex==index?'active':''" v-for="(item,index) in sortOptions" :key="index">{{item.name}}</view>
+				</view>
+			</view>
+			
+			<view class="filterButton" @tap="search">
+				确定
+			</view>
+		</uni-popup>
+		<uni-load-more :status="loadingType">
+		</uni-load-more>
 	</view>
 </template>
 
+
 <script>
-import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
-import {IndexModel} from '@/common/models/index.js'
-let indexModel = new IndexModel()
-export default{
-	data(){
-		return{
-			loadingType:"loading",
-			navbar:[{name:"他的提供"},{name:"他的需求"}],
-			currentTab:0,
-			nav_list: [
-				// {icon: '/static/tab/icosh.png',title: '生活'},
-				// {icon: '/static/tab/icodg.png',title: '代购'},
-				// {icon: '/static/tab/icojz.png',title: '家政'},
-				// {icon: '/static/tab/icojr.png',title: '金融'},
-				// {icon: '/static/tab/icofw.png',title: '房屋'},
-				// {icon: '/static/tab/icowx.png',title: '维修'},
-				// {icon: '/static/tab/icohy.png',title: '会员'}
-			],
-			navActive: 0,
-			
-			isMap: true,
-			show_icon: '/static/cut/near_list.png',
-			
-			latitude: 22.728393,
-			longitude: 114.258532,
-			// controls:[{
-			// 	id: 1,
-			// 	position: {
-			// 		left: 15,
-			// 		top: 15,
-			// 		width: 32,
-			// 		height: 32
-			// 	},
-			// 	iconPath: '/static/cut/aim_icon.png',
-			// 	clickable: true
-			// }],
-			covers: [{
-				id: 1,
-				latitude: 39.909,
-				longitude: 116.39742,
-				iconPath: '/static/tab/icosh.png',
-				width: 30,
-				height: 30,
-				callout: {
-					content: "送水",
-					// color: "#3C3C3C",
-					// fontSize: 12,
-					// bgColor: "#fff",
-					// padding: 10,
-					display: 'BYCLICK'
-				}
-			},{
-				id: 2,
-				latitude: 39.909,
-				longitude: 116.39842,
-				iconPath: '/static/cut/address_on.png',
-				width: 30,
-				height: 30,
-				callout: {
-					content: "买烟",
-					display: 'BYCLICK'
-				}
-			}],
-			map_list: [
-				{img: '',title: '环日液化石油气5kg 即买即送货到家',price: '129.9',sales: '24',fee: 5,away: '1.3'},
-				{img: '',title: '环日液化石油气5kg 即买即送货到家',price: '129.9',sales: '24',fee: 5,away: '1.3'},
-				{img: '',title: '环日液化石油气5kg 即买即送货到家',price: '129.9',sales: '24',fee: 5,away: '1.3'},
-				{img: '',title: '环日液化石油气5kg 即买即送货到家',price: '129.9',sales: '24',fee: 5,away: '1.3'},
-			]
-		}
-	},
-	components:{
-		uniLoadMore
-	},
-	onReady() {
-		let mapCtx = uni.createMapContext("mapId");
-	},
-	onLoad() {
-		indexModel.getNearby((data)=>{
-			console.log(data);
-			this.nav_list = data
-		})
-	},
-	methods:{
-		navbarTap(e){
-			console.log(e)
-			this.currentTab = e;
-		},
-		clickNav(e){
-			this.navActive = e;
-			let firstId = this.nav_list[e].firsttypeinfoId;
-			indexModel.getByNeedFirst({type:2,firstType:firstId},(data)=>{
-				console.log(data);
-			})
-		},
-		changeShow(){
-			this.isMap = !this.isMap;
-			if(this.isMap == true){
-				this.show_icon = '/static/cut/near_list.png';
-			}else{
-				this.show_icon = '/static/cut/near_list.png';//地图icon
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
+	import {IndexModel} from '@/common/models/index.js'
+	const indexmodel = new IndexModel()
+	export default{
+		filters: {
+			disFilter:(value)=> {
+				return (value/1000).toFixed(2)
 			}
 		},
-		loadMoreList(){
-			this.loadingType="noMore"
+		components: {
+			uniPopup,
+			uniLoadMore
 		},
-		markerClick(e){
-			console.log(e.detail.markerId);
-			// uni.navigateTo({
-			// 	url: '/pages/nearby/nearbyDetail?id=' + e.detail.markerId
-			// })
+		data(){
+			return{
+				loadingType:"loading",
+				iconList:[
+					{url:'/static/tab/icosh.png',name:'生活',id:8},
+					{url:'/static/tab/icodg.png',name:'代购',id:10},
+					{url:'/static/tab/icojz.png',name:'家政',id:3},
+					{url:'/static/tab/icojr.png',name:'金融',id:5},
+					{url:'/static/tab/icowx.png',name:'维修',id:9},
+					{url:'/static/tab/icofw.png',name:'房屋',id:1},
+				],
+				queryInfo:{
+					firsttypeId:8,
+					longitude:114.012257,
+					latitude:22.687355,
+					pageNo:1,
+					pageSize:10,
+					type:'',
+					sort:''
+				},
+				list:[],
+				providerOptions:[
+					{name:'全部',id:''},
+					{name:'个人',id:1},
+					{name:'公司',id:2}				
+				],
+				sortOptions:[
+					{name:'销量',id:2},
+					{name:'距离最近',id:1}			
+				],
+				provideIndex:null,
+				sortIndex:null
+			}
 		},
-		// controlTap(e){
-		// 	uni.getLocation({
-		// 	    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
-		// 	    success: function (res) {
-		// 	        const latitude = res.latitude;
-		// 	        const longitude = res.longitude;
-		// 	        uni.openLocation({
-		// 	            latitude: latitude,
-		// 	            longitude: longitude,
-		// 	            success: function () {
-		// 	                console.log('success');
-		// 	            }
-		// 	        });
-		// 	    }
-		// 	});
-		// 	this.latitude = 39.909;
-		// 	this.longitude = 116.39742;
-		// 	console.log(this.latitude,this.longitude);
-		// }
+		onLoad(){
+			
+		},
+		onShow(){
+			this.getList()
+		},
+		onReachBottom(){
+			this.queryInfo.pageNo += 1
+			this.getList()
+		},
+		methods:{
+			async getList(){
+				await indexmodel.findAllSeller(this.queryInfo,data=>{
+					if(data.length<=5){
+						this.loadingType = 'noMore'
+					}
+					if(this.queryInfo.pageNo===1){
+						this.list = data
+					}else{
+						this.list = this.list.concat(data)
+					}
+				})
+			},
+			clickNav(nav){
+				this.queryInfo.firsttypeId = nav.id
+				this.queryInfo.pageNo = 1
+				this.getList()
+			},
+			toStore(item){
+				uni.navigateTo({
+					url:`/pages/shop/theStore?sellerId=${item.sellerId}&type=${item.firstTypeId}`
+				})
+			},
+			filter(){
+				this.$refs.poptop.open()
+			},
+			chooseProveide(item,index){
+				if(this.provideIndex === index){
+					this.provideIndex = null
+				}else{
+					this.provideIndex = index
+				}
+				
+				if(this.provideIndex == null||this.provideIndex == 0){
+					this.queryInfo.type = ''
+				}else{
+					this.queryInfo.type = this.provideIndex
+				}
+			},
+			chooseSort(item,index){
+				if(this.sortIndex === index){
+					this.sortIndex = null
+				}else{
+					this.sortIndex = index
+				}
+				if(this.sortIndex == null){
+					this.queryInfo.sort = ''
+				}else{
+					this.queryInfo.sort = this.sortIndex
+				}
+			
+			},
+			search(){
+				this.queryInfo.pageNo = 1
+				this.getList()
+				this.$refs.poptop.close()
+			},
+			toSearch(){
+				uni.navigateTo({
+					url:'/pages/HM-search/searchSeller'
+				})
+			},
+			toNearbyMap(){
+				indexmodel.findAllSeller({firsttypeId:8,pageSize:1000},data=>{
+					let allSeller = data
+					for(let i of allSeller){
+						i.showFlag = false
+					}
+					uni.navigateTo({
+						url:'/pages/nearby/nearbyMap?data=' + JSON.stringify(allSeller) + '&id=8' 
+					})
+					
+				})
+				
+				
+				
+				
+			}
+			
+			
+		}
 	}
-}
 </script>
 
-<style scoped lang="scss">
-	.place{
-		height: 28px;
+
+<style lang="scss" scoped>
+	page{
+		background-color: #f2f2f2;
 	}
-	// ::-webkit-scrollbar{
-	// 	height:0;
-	// 	width:0;
-	// 	color:transparent;
-	// }
-	.near_header{
-		padding: 20rpx;
-		box-sizing: border-box;
-		background: #fff;
+	.top-header{
+		background-color: #fff;
+		height:88rpx;
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		color: #3C3C3C;
-		font-size: 34rpx;
-		font-family:Source Han Sans CN;
-		image{
-			display: block;
-			width: 38rpx;
-			height: 38rpx;
+		justify-content: space-between;
+		padding: 0 20rpx;
+		.searchImg{
+			width:34rpx;
+			height:38rpx;
 		}
-	}
-	.list_nav{
-		width: 100%;
-		z-index: 20;
-		background: #fff;
-		color: #646464;
-		font-size: 30rpx;
-		text-align: center;
-		overflow: hidden;
-		border-top: 1rpx solid #DCDCDC;
 		view{
-			width: 50%;
-			float: left;
-			padding: 25rpx 0;
-			position: relative;
-			&.active{
-				color: #FF6600;
-			}
-			&.active:after{
-				content: '';
-				width:80rpx;
-				height:6rpx;
-				background:rgba(255,102,0,1);
-				border-radius:3rpx;
-				position: absolute;
-				left: 50%;
-				bottom: 0;
-				transform: translateX(-50%);
-			}
+			font-size:34rpx;
+			font-weight:400;
+			color:rgba(60,60,60,1);
+		}
+		.mapImg{
+			width:40rpx;
+			height:39rpx;
 		}
 	}
 	
-	.scroll_nav_box{
-		padding: 30rpx;
-		box-sizing: border-box;
+	.scroll{
+		height:192rpx;
+		display: flex;
 		border-top: 10rpx solid #F2F2F2;
 		border-bottom: 10rpx solid #F2F2F2;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		white-space: nowrap;
-		background: #fff;
-		.scroll_nav_item{
-			display: inline-block;
-			width: 100rpx;
-			text-align: center;
-			margin-right: 60rpx;
-			color: #3C3C3C;
-			font-size: 26rpx;
-			opacity: .6;
-			&.active{
-				opacity: 1;
+		background-color: #fff;
+		.scroll_nav_box{
+			width:600rpx;
+			padding: 30rpx;
+			box-sizing: border-box;	
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			white-space: nowrap;
+			background: #fff;
+			.scroll_nav_item{
+				display: inline-block;
+				width:74rpx;
+				text-align: center;
+				margin-right: 60rpx;
+				color:#3c3c3c;
+				opacity: 0.6;
+				&.active{
+					opacity: 1;
+				}
+				image{
+					display: block;
+					width:74rpx;
+					height:74rpx;
+					margin-bottom: 10rpx;
+				}
+			}
+		}
+		.line{
+			margin-top: 26rpx;
+			width:2rpx;
+			height:120rpx;
+			background:rgba(255,201,165,1);
+			box-shadow:0rpx 2rpx 8rpx 0rpx rgba(255,163,101,0.8);
+		}
+		.filter{
+			padding:36rpx 0;
+			width:148rpx;
+			display: flex;
+			align-items: center;
+			view{
+				margin-left: 30rpx;
+				font-size:28rpx;
+				color:#3C3C3C;
 			}
 			image{
-				display: block;
-				width: 100rpx;
-				height: 82rpx;
-				margin-bottom: 10rpx;
+				width:24rpx;
+				height:26rpx;
 			}
 		}
 	}
 	
-	.map_list_box{
-		background: #F2F2F2;
-		.map_list_item{
-			background: #fff;
-			padding: 30rpx 20rpx;
-			box-sizing: border-box;
-			margin-top: 10rpx;
-			display: flex;
-			justify-content: space-between;
-			align-items: stretch;
-			&:first-of-type{
-				margin-top: 0;
-			}
-			.left_img{
-				width: 160rpx;
-				height: 160rpx;
-				background: #ccc;
-				border-radius: 10rpx;
-			}
-			.mlist_center{
-				width: 55%;
-				padding: 10rpx 20rpx 10rpx 0;
-				box-sizing: border-box;
+	.item{
+		height:210rpx;
+		background-color: #fff;
+		margin-top: 10rpx;
+		padding:30rpx 20rpx;
+		display: flex;
+		.storeImg{
+			width:150rpx;
+			height:150rpx;
+			border-radius:10rpx;
+			margin-right: 20rpx;
+		}
+		.content{
+			.top{
+				width:540rpx;
 				display: flex;
-				flex-wrap: wrap;
-				.mc_title{
-					color: #3C3C3C;
-					font-size: 26rpx;
-					overflow : hidden;
-					text-overflow: ellipsis;
-					display: -webkit-box;
-					-webkit-line-clamp: 2;
-					-webkit-box-orient: vertical;
-					word-wrap: break-word;
-					word-break: break-all;
-					margin-bottom: 30rpx;;
-				}
-				.mc_info{
-					display: flex;
-					justify-content: flex-start;
-					align-items: center;
-					align-self: flex-end;
-					color: #B4B4B4;
-					font-size: 22rpx;
-					view{
-						color: #FF6600;
-						font-size: 26rpx;
-					}
-					text{
-						margin-left: 30rpx;
-					}
+				justify-content: space-between;
+				.title{
+					font-size:28rpx;
+					color:#1E1E1E;
 				}
 			}
-			.mlist_right{
-				width: 15%;
-				padding: 10rpx 20rpx 10rpx 0;
-				box-sizing: border-box;
+			.middle{
+				margin-top: 20rpx;
 				display: flex;
-				justify-content: flex-end;
-				flex-wrap: wrap;
-				color: #787878;
-				font-size: 24rpx;
+				height:30rpx;
+				align-items: center;
 				image{
+					width:25rpx;
+					height:23rpx;
+				}
+				view{
+					margin-left: 8rpx;
+					color:#646464;
+					font-size:24rpx;
+				}
+			}
+			.bottom{
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-top: 20rpx;
+				.toStore{
 					display: flex;
-					align-self: flex-end;
-					width: 56rpx;
-					height: 56rpx;
+					align-items: center;
+					view{
+						color:#FF6600;
+						margin-right: 5rpx;
+					}
+					image{
+						width:10rpx;
+						height:20rpx;
+					}
 				}
 			}
 		}
+	}
+	
+	.filterTop{
+		.title{
+			color:#646464;
+			font-size:28rpx;
+			margin-bottom: 20rpx;
+		}
+		.labelBox{
+			border-bottom: 1rpx solid #F2F2F2;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			padding-bottom: 30rpx;
+			.label{
+				margin-right: 20rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 30rpx;
+				height:58rpx;
+				background:rgba(240,240,240,1);
+				border-radius:10px;
+				&.active{
+					background:#FFF1E8;
+					color:#FF6600;
+				}
+			}
+		}
+	}
+	
+	.filterButton{
+		margin-top: 200rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color:#fff;
+		width:710rpx;
+		height:70rpx;
+		background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+		border-radius:10rpx;
 	}
 </style>

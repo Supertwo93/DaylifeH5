@@ -15,7 +15,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<provide-title v-if="type!=3" :price="data.goods.price" :title="data.goods.goodsName" 
+		<provide-title :price="data.goods.price" :title="data.goods.goodsName" 
 		:sale="'月售' + data.goods.monthSale" :spec="'配送费￥'+data.goods.postFee"
 		disc="km"></provide-title>
 		<view class="spec" @tap="chooseSpec">

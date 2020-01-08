@@ -160,7 +160,7 @@
 			housemodel.getHouseList({houseId:id},data=>{
 				this.data = data.houseList[0]
 				this.isCollect = data.isCollect
-				storemodel.getSellerStore({sellerId: this.data.sellerId},(res)=>{
+				storemodel.getSellerInfo({sellerId: this.data.sellerId},(res)=>{
 					this.isOpenDate = res.isOpenDate;
 				})
 				this.data.mainScore = parseInt(this.data.mainScore)

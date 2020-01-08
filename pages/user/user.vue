@@ -89,20 +89,23 @@
 			<view class="use-main">
 				<view class="advertisement"></view>
 				<view class="wallet-box">
-					<view class="upper" @tap="toMyWallet()">
-						<view class="lf">
+					<view class="upper">
+						<view class="lf" @tap="toMyWallet()">
 							<image class="walletImg" src="/static/cut/discenter_icon2.png"></image>
 							<text class="my-wallet">我的钱包</text>
+							<image v-if="moneyShow" @tap.stop="isMoneyShow" src="/static/cut/show.png"></image>
+							<image v-else  @tap.stop="isMoneyShow" src="/static/cut/hide.png"></image>
 						</view>
-						<view class="rt">
+						<view class="rt" @tap="toWalletDetail()">
 							<text class="gray">查看明细</text>
 							<image src="/static/cut/grayright.png"></image>
 						</view>
 					</view>
 					<view class="lower">
-						<view class="lf">
+						<view class="lf" @tap="toMyWallet()">
 							<text class="balance">余额：</text>
-							<text>{{uerInfo.withdrawYuMoney}}</text>
+							<text v-if="moneyShow">{{uerInfo.withdrawYuMoney}}</text>
+							<text v-else>****</text>
 						</view>
 						<view class="rt">
 							<view class="button cashOut" @tap="toCashout()">提现</view>
@@ -232,7 +235,8 @@ export default{
 			name:'',
 			userid:'',
 			money: '',
-			isAttendance:''
+			isAttendance:'',
+			moneyShow:true
 		}
 	},
 	computed: {
@@ -243,7 +247,7 @@ export default{
 	},
 	onShow:function(){
 		// 查询是否签到
-		checkModel.getSignSelect((data)=>{
+		checkModel.getSignSelect({},data=>{
 			this.isAttendance = data.isTodaySign;
 			console.log(this.isAttendance);
 		})
@@ -354,6 +358,11 @@ export default{
 				url:'../wallet/mywallet'
 			})
 		},
+		toWalletDetail(){
+			uni.navigateTo({
+				url:'/pages/wallet/detail'
+			})
+		},
 		toMyCoupon(){
 			uni.navigateTo({
 				url:'../wallet/coupon'
@@ -433,6 +442,9 @@ export default{
 			uni.navigateTo({
 				url:'/pages/user/record/visitrecord'
 			})
+		},
+		isMoneyShow(){
+			this.moneyShow = !this.moneyShow
 		},
 		toSellerOrder(index){
 			userModel.getInfo((data)=>{
@@ -657,9 +669,12 @@ export default{
 			background-color: #fff;
 			padding:0 30rpx;
 			.upper{
+				height:72rpx;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-bottom: 1rpx solid #f2f2f2;
 				.lf{
-					display: flex;
-					align-items: center;
 					.walletImg{
 						margin-right: 10rpx;
 						width:28rpx;
@@ -670,17 +685,19 @@ export default{
 						margin-right: 10rpx;
 						font-weight:500;
 					}
+					image{
+						width:32rpx;
+						height:22rpx;
+					}
 				}
-				image{
-					margin-left: 10rpx;
-					width:10rpx;
-					height:20rpx;
+				.rt{
+					image{
+						margin-left: 10rpx;
+						width:10rpx;
+						height:20rpx;
+					}
 				}
-				height:72rpx;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				border-bottom: 1rpx solid #f2f2f2;
+				
 			}
 			.lower{
 				display: flex;

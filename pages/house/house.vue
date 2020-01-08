@@ -10,7 +10,7 @@
 		</view>
 		<block v-for="(row,number) in houseList" :key="number">
 			<item-service :src="row.picture.split(',')[0]" :title="row.title" @toNextPage='toDetail(number)'
-			:money="row.price" :desc="row.squareMetre+'㎡  ' + '|' + '  ' + row.floor + '/' + row.attribute + '层'"></item-service>
+			:money="row.price" :desc="row.squareMetre+'㎡'"></item-service>
 		</block>
 		<uni-load-more :status='status'></uni-load-more>
 		<uni-popup ref="poptop" type="top">

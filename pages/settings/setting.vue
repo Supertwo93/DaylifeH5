@@ -24,11 +24,11 @@
 		<view class="defaultTitle">通用</view>
 		
 		<view class="topContainer">
-			<view class="container" @tap="toHelp()">
+			<!-- <view class="container" @tap="toHelp()">
 				当前版本
 				<view class="iconfont icon-dibudaohanglan-"></view>
-			</view>
-			<view class="container none" @tap="toHelp()">
+			</view> -->
+			<view class="container none" @tap="clearStorage()">
 				清除缓存
 				<view class="iconfont icon-dibudaohanglan-"></view>
 			</view>
@@ -96,6 +96,13 @@ export default{
 		toSuggestion(){
 			uni.navigateTo({
 				url:'suggestion'
+			})
+		},
+		clearStorage(){
+			uni.showToast({
+				title:'清除成功',
+				icon:'none',
+				duration:1500
 			})
 		}
 	}

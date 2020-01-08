@@ -1,6 +1,19 @@
 <template>
 	<view>
-		<view class="topContainer">
+		<view class="nav">
+			<view class="top">
+				<image @tap="back()" src="/static/cut/back_white.png"></image>
+				<view class="title">我的积分</view>
+			</view>
+			<view class="middle">
+				<view></view>
+				<image src="/static/cut/diamond.png"></image>
+			</view>
+			<view class="tips">当前积分总数量</view>
+			<view class="storePoint">{{uerInfo.store}}</view>
+		</view>
+		
+		<!-- <view class="topContainer">
 			<view class="title">当前积分总数量</view>
 			<view class="point">{{uerInfo.store}}</view>
 			<view class="button" @tap="showPop()">兑换成余额</view>
@@ -20,7 +33,7 @@
 				<view class="cancel button" @tap="showPop()">取消</view>
 				<view class="confirm button" @tap="scoreExchange()">确认</view>
 			</view>
-		</view>
+		</view> -->
 		
 		<view class="middleTitle">积分明细</view>
 		
@@ -81,6 +94,11 @@
 				usermodel.storeExchange(this.store,(data)=>{
 					
 				})
+			},
+			back(){
+				uni.navigateBack({
+					delta:1
+				})
 			}
 		}
 	}
@@ -89,6 +107,57 @@
 <style lang="scss">
 page{
 	background-color: #f2f2f2;
+}
+.nav{
+	padding:33rpx 20rpx 0 20rpx;
+	width:750rpx;
+	height:520rpx;
+	background:linear-gradient(-90deg,rgba(84,190,250,1),rgba(78,149,255,1));
+	.top{
+		display: flex;
+		image{
+			width:20rpx;
+			height:34rpx;
+		}
+		.title{
+			margin-left: 260rpx;
+			font-size:36rpx;
+			color:rgba(255,255,255,1);
+		}
+	}
+	.middle{
+		height:219rpx;
+		position: relative;
+		image{
+			position: absolute;
+			top:94rpx;
+			left:333rpx;
+			width:44rpx;
+			height:44rpx;
+		}
+		view{
+			position: absolute;
+			left:300rpx;
+			top:60rpx;
+			width:110rpx;
+			height:110rpx;
+			background:rgba(0,0,0,1);
+			opacity:0.12;
+			border-radius:50%;
+		}
+	}
+	.tips{
+		width:100%;
+		text-align: center;
+		color:rgba(255,255,255,1);
+	}
+	.storePoint{
+		width:100%;
+		text-align: center;
+		font-size:110rpx;
+		font-family:Bahnschrift;
+		color:rgba(255,255,255,1);
+	}
 }
 .topContainer{
 	width:100%;

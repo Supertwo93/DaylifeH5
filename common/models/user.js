@@ -342,6 +342,76 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	getUserCashFlow(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/usercashflow/getList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getQRCode(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/userMemberCard/getQRCode',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	checkFlowList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/memberCardConsumeFlow/list',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	checkFlowDetail(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/memberCardConsumeFlow/getById',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	checkPointFlow(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/memberCardPointsFlow/list',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getChargeActivity(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/memberCardRechargeActivity/list',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	cardRecharge(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/userMemberCard/rechargeByTenpayAlipay',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

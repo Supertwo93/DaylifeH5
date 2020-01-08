@@ -5,16 +5,16 @@
 			<view class="card" :style="{background:'url(' + data.carPic + ')','background-size': '100% 100%'}">
 				<image class="icon" :src="data.logoPic"></image>
 				<view class="type">会员卡</view>
-				<view class="store">{{data.nickName}}</view>
+				<view class="storeName">{{data.nickName}}</view>
 				<view class="cardNum">{{data.cardNo}}</view>
 				<image src="/static/cut/code.png" class="code" @tap="toCode()"></image>
 			</view>
 			<view class="detail">
-				<view class="balance">
+				<view class="balance" @tap="toFlowDetail">
 					<view class="text">余额</view>
 					<view class="number">{{data.balance}}</view>
 				</view>
-				<view class="balance">
+				<view @tap="toPointRecord()" class="balance">
 					<view class="text">积分</view>
 					<view class="number">{{data.points}}</view>
 				</view>
@@ -22,14 +22,14 @@
 		</view>
 		
 		<view class="list" :class="[display ?'opa':'']">
-			<view class="item">
+			<view class="item" @tap="toCharge">
 				<view>充值</view>
 				<image src="/static/cut/grayright.png"></image>
 			</view>
-			<view class="item" @tap="toChange()">
+<!-- 			<view class="item" @tap="toChange()">
 				<view>积分兑换成余额</view>
 				<image src="/static/cut/grayright.png"></image>
-			</view>
+			</view> -->
 			<view class="item" @tap="cancelCard()">
 				<view>删除该店会员卡</view>
 				<image src="/static/cut/grayright.png"></image>
@@ -37,10 +37,10 @@
 		</view>
 		
 		<view class="delete" :class="[deleted ?'':'none']">
-			<viwe class="title">
+			<view class="title">
 				<view>删除后无法享受相应权益，</view>
 				<view>确认要删除吗？</view>
-			</viwe>
+			</view>
 			<view class="buttons">
 				<view @tap="cancelCard()" class="cancel" style="border-right:1rpx solid #DCDCDC">取消</view>
 				<view class="default" @tap="deleteCard">删除</view>
@@ -55,7 +55,7 @@
 			</view>
 			<view class="money">
 				<view class="name">可兑换成余额</view>
-				<view class="number">￥2.03</view>
+				<view class="number">￥0.00</view>
 			</view>
 			<view class="buttons">
 				<view class="cancel button" @tap="toChange()">取消</view>
@@ -76,10 +76,12 @@ export default{
 			deleted:false,
 			change:false,
 			display:false,
-			data:''
+			data:'',
+			id:''
 		}
 	},
 	onLoad(options) {
+		this.id = options.id
 		let req = {id:options.id}
 		vipmodel.getUserCardDetail(req,(data)=>{
 			this.data = data
@@ -96,7 +98,7 @@ export default{
 		},
 		toCode(){
 			uni.navigateTo({
-				url:'cardcode'
+				url:'cardcode?id=' + this.id + '&data=' + JSON.stringify(this.data)
 			})
 		},
 		deleteCard(){
@@ -113,7 +115,23 @@ export default{
 					})
 				},2000)
 			})
+		},
+		toFlowDetail(){
+			uni.navigateTo({
+				url:'/pages/user/card/flowList?id=' + this.id
+			})
+		},
+		toPointRecord(){
+			uni.navigateTo({
+				url:'/pages/user/card/pointRecord?id=' + this.id
+			})
+		},
+		toCharge(){
+			uni.navigateTo({
+				url:'/pages/user/card/cardCharge?id=' + this.data.memberCardId + '&userId=' + this.id
+			})
 		}
+		
 	}
 }
 </script>
@@ -144,7 +162,7 @@ export default{
 			top:30rpx;
 			left:112rpx;
 		}
-		.store{
+		.storeName{
 			font-size:22rpx;
 			font-weight:400;
 			color:rgba(255,255,255,1);

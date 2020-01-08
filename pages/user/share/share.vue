@@ -8,8 +8,9 @@
 		<view class="body" :class="[displayLink==1?'':'opa']" @tap.stop="hideLink()">
 			
 			<view class="body-code">
-				<image src="" mode=""></image>
+				<image @tap="previewImage(src)" :src="src" mode=""></image>
 			</view>
+			<view class="number">邀请码：{{uerInfo.refereeCode}}</view>
 			<view class="body-font">
 				<image @click="clickShow" src="/static/shareLink.png"></image>
 				<image @click="clickShow" src="/static/cut/share_pic.png"></image>
@@ -33,10 +34,12 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import NativeShare from '../../../common/SDK/NativeShare.js'
 export default{
 	data(){
 		return{
+			src:'https://sgz.wdttsh.com/mini_static/minicode.png',
 			displayLink:true,
 			shareList:[{
 				title:'微信好友',
@@ -59,6 +62,9 @@ export default{
 			appVersion:null,
 		}
 	},
+	computed: {
+		...mapState(['uerInfo'])
+	},  
 	onShareAppMessage(res){
 		return{
 			title:'江南皮革厂倒闭了',
@@ -97,6 +103,12 @@ export default{
 			if( id === 'wrap' ){
 				this.showWrap = false;
 			}
+		},
+		previewImage(src){
+			uni.previewImage({
+				current:src,
+				urls:[src]
+			})
 		},
 		share(index){
 			// #ifdef H5
@@ -143,7 +155,7 @@ export default{
 	flex-direction: column;
 	// background-color: red;
 	background: url('~@/static/shareLogo.png') no-repeat;
-	background-size: 100% 90%;
+	background-size: 100% 100%;
 	background-color: #fef0f0;
 	// background-position: 0 -100rpx;
 }
@@ -155,7 +167,7 @@ export default{
 		position: absolute;
 		width:20rpx;
 		height:34rpx;
-		top:67rpx;
+		top:47rpx;
 		left:20rpx;
 	}
 	view{
@@ -164,7 +176,7 @@ export default{
 		color:rgba(255,255,255,1);
 		line-height:36rpx;
 		position: absolute;
-		top:67rpx;
+		top:47rpx;
 		left:300rpx;
 	}
 }	
@@ -198,7 +210,7 @@ export default{
 	}
 	.number{
 		position: absolute;
-		top:984rpx;
+		top:990rpx;
 		left:236rpx;
 		font-size:34rpx;
 		font-weight:500;
@@ -273,21 +285,21 @@ export default{
 .body-code{
 	// width: 250rpx;
 	// height: 250rpx;
-	padding: 30rpx;
+	padding: 20rpx;
 	position: absolute;
-	bottom: 234rpx;
+	top:650rpx;
 	left: 50%;
 	transform: translateX(-50%);
 	display: inline-block;
 	background-color: white;
 	image{
-		width: 294rpx;
-		height: 294rpx;
+		width: 254rpx;
+		height: 254rpx;
 	}
 }
 .body-font{
 	position: absolute;
-	bottom: 61rpx;
+	top:1050rpx;
 	left: 0;
 	width: 100%;
 	height: 80rpx;
