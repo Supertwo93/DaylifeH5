@@ -46,8 +46,8 @@
 							<view class="icon iconfont icon-iconfontshanchu1"></view>
 						</view>
 						
-						<view class="carrier" :class="[theIndex==index&&theNumber==number?'open':oldIndex==index&&oldNumber==number?'close':'']" @touchstart="touchStart(index,number,$event)" @touchmove="touchMove(index,number,$event)" @touchend="touchEnd(index,number,$event)">
-							<view class="checkbox" @tap="goodChoose(row,good)">
+						<view @tap="toGoodsDetail(row,good)" class="carrier" :class="[theIndex==index&&theNumber==number?'open':oldIndex==index&&oldNumber==number?'close':'']" @touchstart="touchStart(index,number,$event)" @touchmove="touchMove(index,number,$event)" @touchend="touchEnd(index,number,$event)">
+							<view class="checkbox" @tap.stop="goodChoose(row,good)">
 								<image v-if="good.selected == false" src="../../static/cut/no_selected.png"></image>
 								<image v-if="good.selected == true" src="../../static/cut/selected.png"></image>
 								
@@ -89,7 +89,7 @@
 				</view>
 				<view v-if="isAccounted==1" class="right">
 					<view class="acomplish" @tap="tab()">完成</view>
-					<view class="moveButton">移至收藏</view>
+					<!-- <view class="moveButton">移至收藏</view> -->
 					<view class="button" @tap="deleteList">删除</view>
 				</view>
 						
@@ -266,6 +266,9 @@
 			...mapState(['hasLogin'])
 		},
 		methods:{
+			toGoodsDetail(row,good){
+				console.log(row,good)
+			},
 			navToLogin(){
 				uni.navigateTo({
 					url:"../login/login"
@@ -313,8 +316,8 @@
 				this.allSelected ? this.shopingCarlist.forEach((row)=>this.shopTrue(row)) : this.shopingCarlist.forEach((row)=>this.shopFalse(row))
 			},
 			sub(good){
-				if(good.num === 1){
-					good.num
+				if(good.num == 1){
+					good.num 
 				}else{
 					good.num--
 					good.selected?this.sumPrice -= good.price : ''
@@ -821,11 +824,12 @@ page{
 					background-color: #fff;
 					position:absolute;
 					display: flex;
-					align-items: center;
+					// align-items: center;
 					width:100%;
 					height:100%;
 					z-index:3;
 					.checkbox{
+						margin-top: 80rpx;
 						margin-left:19rpx;
 						image{
 							height:34rpx;
@@ -833,12 +837,14 @@ page{
 						}
 					}
 					.storeImage{
+						margin-top: 20rpx;
 						margin-left:21rpx;
 						width:140rpx;
 						height:140rpx;
 						border-radius:10rpx;
 					}
 					.detail{
+						margin-top: 20rpx;
 						height:140rpx;
 						width:560rpx;
 						padding-left:20rpx;
@@ -906,7 +912,7 @@ page{
 		bottom:0;
 		/*  #endif  */
 		/*  #ifdef  H5  */
-		bottom:100rpx;
+		bottom:90rpx;
 		/*  #endif  */
 		
 		width:100%;
@@ -989,7 +995,7 @@ page{
 				color:rgba(60,60,60,1);
 			}
 			.button{
-				margin-left:20rpx;
+				margin-left:352rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;

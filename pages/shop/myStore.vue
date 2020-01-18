@@ -72,7 +72,7 @@
 								<view v-if="typeId!=1&&typeId!=5" class="goodsTitle">{{item2.goodsName}}</view>
 								<!-- <view class="describe">第{{index2+1}}个商品的描述内容</view> -->
 								<view class="money">
-									<view class="price">{{item2.price}}</view>
+									<view class="price">￥{{item2.price}}</view>
 									<image @tap="toEdit(item2)" src="/static/cut/address_edit.png"></image>
 								</view>
 							</view>

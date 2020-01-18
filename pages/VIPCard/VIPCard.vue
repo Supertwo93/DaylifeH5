@@ -1,16 +1,16 @@
 <template>
 	<view>
 		<bavigationbar></bavigationbar>
-		<swiper :swiperImage="swiperImage"></swiper>
+		<Swiper :swiperImage="swiperImage"></Swiper>
 		<view class="indexChooseType">
 			<view class="title">生活服务</view>
 			<view class="icon" @tap="pop()">
 				筛选<image src="/static/cut/filter_icon.png"></image>
 			</view>
 		</view>
-		<block v-for="(item,index) in data" :key="index">
-			<item-service :src="item.carPic" :title="item.title" :type="item.cardType" :money="item.price" :desc="'办理人数：' + item.totalSale" @tap='toDetail(index)'></item-service>
-		</block>
+		<view @tap="toDetail(index)" v-for="(item,index) in data" :key="index">
+			<item-service :src="item.carPic" :title="item.title" :type="item.cardType" :money="item.price" :desc="'办理人数：' + item.totalSale"></item-service>
+		</view>
 	</view>
 </template>
 
@@ -57,5 +57,7 @@
 </script>
 
 <style>
-
+page{
+	background-color: #f2f2f2;
+}
 </style>

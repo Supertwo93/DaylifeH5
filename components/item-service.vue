@@ -15,7 +15,7 @@
 							<text>免费办理</text>
 						</block>
 						<block v-else>
-							￥<text> {{money}}</text>
+							<text> ￥{{money}}</text>
 						</block>
 					</view>
 				</view>

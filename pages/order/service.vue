@@ -17,13 +17,13 @@
 			<view class="uni-list-cell-top">
 				<view class="uni-list-cell-left">申请原因</view>
 				<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-					<view class="uni-input">{{array[index].name}} > </view>
+					<view class="uni-input">{{array[index].name}} <image src="/static/cut/grayright.png" class="icon"></image> </view>
 				</picker>
 			</view>
 			<view class="uni-list-cell-mi">
 				<view class="uni-list-cell-left">售后方式</view>
 				<picker @change="bindPickerChange2" :value="index2" :range="reason" range-key="name">
-					<view class="uni-input">{{reason[index2].name}} > </view>
+					<view class="uni-input">{{reason[index2].name}} <image src="/static/cut/grayright.png" class="icon"></image> </view>
 				</picker>
 			</view>
 			<view class="uni-list-cell-bt">
@@ -125,7 +125,11 @@
 page{
 	background-color:#F2F2F2;
 }
-
+.icon{
+	margin-left: 10rpx;
+	width:10rpx;
+	height:20rpx;
+}
 .top{
 	background-color: #fff;
 	width:100%;

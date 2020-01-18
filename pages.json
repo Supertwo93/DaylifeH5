@@ -8,6 +8,34 @@
 			}
 		},
 		{
+			"path": "pages/realease/provideIndex",
+			"style": {
+				"navigationBarTitleText": "发布中心",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/login/agreement",
+			"style": {
+				"navigationBarTitleText": "用户协议",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/qrcode/record",
+			"style": {
+				"navigationBarTitleText": "收款记录",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/qrcode/setMoney",
+			"style": {
+				"navigationBarTitleText": "设置金额",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "订单",
@@ -26,6 +54,19 @@
 			"style":{
 				"navigationBarTitleText":"店铺搜索",
 				"navigationBarBackgroundColor":"#FFF"
+			}
+		},
+		{
+		    "path" : "pages/msg/chat",
+		    "style" : {
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"backgroundColorTop":"#e5e5e5",
+				"backgroundColorBottom":"#e5e5e5",
+				"navigationBarTitleText": "聊天",
+				"app-plus":{
+					"softinputNavBar":"none",
+					"bounce":"none"
+				}
 			}
 		},
 		{
@@ -81,6 +122,13 @@
 					"titleNView": false ,//禁用原生导航栏
 					"bounce":"none"
 				}
+			}
+		},
+		{
+			"path": "pages/realease/success",
+			"style":{
+				"navigationBarTitleText":"发布成功",
+				"navigationBarBackgroundColor":"#FFF"
 			}
 		},
 		{
@@ -912,7 +960,42 @@
 				"navigationBarTitleText": "隐私政策",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+			"path" : "pages/user/store/openStore",
+			"style" : {
+				"navigationBarTitleText": "开通店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/storeOpen",
+			"style" : {
+				"navigationBarTitleText": "个人开店",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/verify",
+			"style" : {
+				"navigationBarTitleText": "开通店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/verifyFailed",
+			"style" : {
+				"navigationBarTitleText": "认证失败",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
+        ,{
+            "path" : "pages/user/qrcode/qrcode",
+            "style" : {
+				"navigationBarTitleText": "收付款码",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -938,7 +1021,7 @@
 			"text": "附近"
 		},  
 		 {
-			"pagePath": "pages/realease/provide",
+			"pagePath": "pages/realease/provideIndex",
 			"iconPath": "static/tab/tab_add_onselected.png",
 			"selectedIconPath": "static/tab/tab_add_onselected.png"
 		},{

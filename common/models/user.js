@@ -67,6 +67,17 @@ class UserModel extends HTTP{
 		this.request(params)
 	}
 	
+	
+	deleteVisitRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/historyRecord/cleanMultiple',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 	//查询用户评论
 	
 	getUserComment(success){
@@ -407,6 +418,48 @@ class UserModel extends HTTP{
 		let params = {
 			method:'POST',
 			url:'/app/userMemberCard/rechargeByTenpayAlipay',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	
+	personalCerAndOpeningStore(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appuser/personalCerAndOpeningStore',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	companyCerAndOpeningStore(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appuser/companyCerAndOpeningStore',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	
+	createQrcode(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/business/createCollectionQRCode',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getReceiptRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/business/queryReceiptRecord',
 			data:data,
 			success:success
 		}

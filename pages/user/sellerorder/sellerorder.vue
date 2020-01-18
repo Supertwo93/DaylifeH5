@@ -6,17 +6,19 @@
 			</view>
 		</view>
 		
+		<view v-if="orderList.length==0" class="noOrder">
+			<image src="/static/cut/noorder.png"></image>
+			<view v-if="tabbarIndex==0">暂无待接单订单哦，快去发布商品</view>
+			<view v-if="tabbarIndex==1">暂无待处理订单哦，快去接单吧</view>
+			<view v-if="tabbarIndex==2">暂无已处理订单哦，快去接单吧</view>
+			<view v-if="tabbarIndex==3">暂无已完成订单哦，快去接单吧</view>
+			<view v-if="tabbarIndex==4">暂无售后订单哦</view>
+		</view>
+		
 		<view v-if='tabbarIndex!=4'>
-			<view v-if="orderList.length==0" class="noOrder">
-				<image src="/static/cut/noSearchRecord.png"></image>
-				<view v-if="tabbarIndex==0">暂无待接单订单哦，快去发布商品</view>
-				<view v-if="tabbarIndex==1">暂无待处理订单哦，快去接单吧</view>
-				<view v-if="tabbarIndex==2">暂无已处理订单哦，快去接单吧</view>
-				<view v-if="tabbarIndex==3">暂无已完成订单哦，快去接单吧</view>
-				<view v-if="tabbarIndex==4">暂无售后订单哦</view>
-			</view>
 			
-			<view v-else>
+			
+			<view>
 				<block v-for="(item,index) in orderList" :key="index">
 					<block v-if="id==1">
 						<business-order :id="id" :status="status" :orderNum="item.orderCode"
@@ -296,7 +298,7 @@ page{
 		margin-left: 174rpx;
 	}
 	view{
-		margin-left: 200rpx;
+		text-align: center;
 		margin-top: 39rpx;
 	}
 }

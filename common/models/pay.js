@@ -97,7 +97,18 @@ class PayModel extends HTTP{
 		}
 		this.request(params)
 	}
-
+    
+	
+	htmlPay(data,success,fail){
+		let params = {
+			method:'POST',
+			url:'/app/wechat/wechatSPPay',
+			data:data,
+			success,
+			fail
+		}
+		this.request(params)
+	}
 	
 
 }

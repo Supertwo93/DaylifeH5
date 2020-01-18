@@ -22,8 +22,8 @@
 						<view class="information">
 							<view class="names">
 								<text>{{uerInfo.nickname}}</text>
-								<image src="../../static/cut/lable.png" mode=""></image>
-								<image src="../../static/cut/portrait.png" mode=""></image>
+								<image v-if="uerInfo.personalCerStatus==3&&uerInfo.companyCerStatus!=3" src="../../static/cut/lable.png" mode=""></image>
+								<image v-if="uerInfo.companyCerStatus==3" src="../../static/cut/portrait.png" mode=""></image>
 							</view>
 							<text v-if="uerInfo.loginName!=null">
 								ID：{{uerInfo.loginName}}
@@ -35,16 +35,16 @@
 					</view>
 				</view>
 				<view class="service-block">
-					<view class="item">
-						<text>0</text>
-						<view>提供服务</view>
+					<view @tap="toMyComment()" class="item">
+						<text>{{commentCount}}</text>
+						<view>我的评价</view>
 					</view>
-					<view class="item">
-						<text>0</text>
-						<view>享受服务</view>
+					<view  @tap="toMyCollection()" class="item">
+						<text>{{collectCount}}</text>
+						<view>我的收藏</view>
 					</view>
-					<view class="item">
-						<text>45</text>
+					<view @tap="toMyAttendance()" class="item">
+						<text>{{store}}</text>
 						<view>我的积分</view>
 					</view>
 					<view class="item" @tap="toMyRecord">
@@ -104,7 +104,7 @@
 					<view class="lower">
 						<view class="lf" @tap="toMyWallet()">
 							<text class="balance">余额：</text>
-							<text v-if="moneyShow">{{uerInfo.withdrawYuMoney}}</text>
+							<text v-if="moneyShow">{{withdrawYuMoney}}</text>
 							<text v-else>****</text>
 						</view>
 						<view class="rt">
@@ -119,7 +119,7 @@
 						<text>常用功能</text>
 					</view>
 					<view class="main">
-						<view class="item" @tap="scanCode()">
+						<view class="item" @tap="toQrcode()">
 							<view class='icon'>
 								<image src="/static/cut/user/payCode.png" mode="widthFix"></image>
 							</view>
@@ -161,24 +161,19 @@
 							</view>
 							<text>我的同事</text>
 						</view>
-						<view class="item" @tap="toMyCollection()">
+						<!-- <view class="item">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-f.png" mode="widthFix"></image>
 							</view>
 							<text>我的收藏</text>
-						</view>
+						</view> -->
 						<view class="item" @tap="toMyCoupon()">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-g.png" mode="widthFix"></image>
 							</view>
 							<text>我的优惠券</text>
 						</view>
-						<view class="item" @tap="toMyPoints()">
-							<view class='icon'>
-								<image src="../../static/cut/ionc-h.png" mode="widthFix"></image>
-							</view>
-							<text>我的积分</text>
-						</view>
+						
 					</view>
 				</view>
 				<view class="service-block">
@@ -193,11 +188,17 @@
 							</view>
 							<text>分销中心</text>
 						</view>
-						<view class="item" @tap="toMyComment()">
+						<!-- <view class="item" >
 							<view class='icon'>
 								<image src="../../static/cut/ionc-k.png" mode="widthFix"></image>
 							</view>
 							<text>我的评价</text>
+						</view> -->
+						<view class="item" @tap="toMyPoints()">
+							<view class='icon'>
+								<image src="../../static/cut/ionc-h.png" mode="widthFix"></image>
+							</view>
+							<text>我的积分</text>
 						</view>
 						<view class="item" @tap="toShare()">
 							<view class='icon'>
@@ -205,7 +206,7 @@
 							</view>
 							<text>邀请有礼</text>
 						</view>
-						<view class="item">
+						<view class="item"  @tap="toChat()">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-m.png" mode="widthFix"></image>
 							</view>
@@ -236,7 +237,11 @@ export default{
 			userid:'',
 			money: '',
 			isAttendance:'',
-			moneyShow:true
+			moneyShow:true,
+			store:'',
+			commentCount:'',
+			collectCount:'',
+			withdrawYuMoney:''
 		}
 	},
 	computed: {
@@ -246,11 +251,23 @@ export default{
 		
 	},
 	onShow:function(){
+		if(this.hasLogin){
+			checkModel.getUserInfo(data=>{
+				this.store = data.store
+				this.commentCount = data.goodCommentCount
+				this.collectCount = data.collectCount
+				this.withdrawYuMoney = data.withdrawYuMoney
+			})
+		}
+		
 		// 查询是否签到
-		checkModel.getSignSelect({},data=>{
-			this.isAttendance = data.isTodaySign;
-			console.log(this.isAttendance);
-		})
+		if(this.hasLogin){
+			checkModel.getSignSelect({},data=>{
+				this.isAttendance = data.isTodaySign;
+				console.log(this.isAttendance);
+			})
+		}
+		
 		// 查询是否授权登录
 		// #ifndef H5
 		uni.getSetting({
@@ -295,7 +312,25 @@ export default{
 	},
 	methods:{
 		...mapMutations(["login"]),
-		
+		toChat(){
+			let that = this
+			uni.request({
+				url:'https://sgz.wdttsh.com/app/systemparam/getServiceInfo',
+				method:'POST',
+				success(res){
+					that.$store.commit('resetCurrentConversation')
+					that.$store.commit('resetGroup')
+					that.tim.getConversationProfile(`C2C${res.data.data.serviceId}`)
+						.then((result) => {
+							that.$store.commit('updateCurrentConversation',result.data.conversation)
+							that.$store.dispatch('getMessageList')
+						}) 
+					uni.navigateTo({
+						url:"/pages/msg/chat?toAccount="+ res.data.data.serviceNickname
+					})
+				}
+			})
+		},
 		navToLogin(){
 			// uni.navigateTo({
 			// 	url:"../login/login"
@@ -335,6 +370,11 @@ export default{
 				});
 			}
 			// #endif
+		},
+		toQrcode(){
+			uni.navigateTo({
+				url:'/pages/user/qrcode/qrcode?type=0'
+			})
 		},
 		scanCode(){
 			// #ifndef H5
@@ -478,29 +518,22 @@ export default{
 		toMyStore(){
 			userModel.getInfo((data)=>{
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
-					if(data.storeId==null||data.storeId==''){
+					storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
 						uni.navigateTo({
-							url:'/pages/user/store/mystore?storeId=' + data.storeId
+							url:`/pages/shop/myStore?sellerId=${data.storeId}&type=${res.firstTypeId}`
 						})
-					}else{
-						console.log(data);
-						storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
-							uni.navigateTo({
-								url:`/pages/shop/myStore?sellerId=${data.storeId}&type=${res.firstTypeId}`
-							})
-						})
-					}
-				}else{
-					uni.showModal({
-						title:'您还没有认证，请先做认证',
-						confirmText:'去认证',
-						success(res){
-							if(res.confirm){
-								uni.navigateTo({
-									url:'/pages/modify/certification'
-								})
-							}
-						}
+					})
+				}else if(data.personalCerStatus==1&&data.companyCerStatus==1){
+					uni.navigateTo({
+						url:'/pages/user/store/openStore'
+					})
+				}else if(data.personalCerStatus==2||data.companyCerStatus==2){
+					uni.navigateTo({
+						url:'/pages/user/store/verify'
+					})
+				}else if(data.personalCerStatus==4||data.companyCerStatus==4){
+					uni.navigateTo({
+						url:'/pages/user/store/verifyFailed?reason=' + data.personalCerReason
 					})
 				}
 			})
@@ -615,7 +648,7 @@ export default{
 				padding-bottom: 24rpx;
 				.lf{
 					.my-provide{
-						color:#3C3C3C;
+						color:#1e1e1e;
 						margin-right: 10rpx;
 						font-weight:500;
 					}
@@ -681,7 +714,7 @@ export default{
 						height: 28rpx;
 					}
 					text{
-						color:#3C3C3C;
+						color:#1e1e1e;
 						margin-right: 10rpx;
 						font-weight:500;
 					}
@@ -751,6 +784,9 @@ export default{
 				font-weight:500;
 				color:rgba(60,60,60,1);
 				line-height:22rpx;
+				text{
+					color:#1e1e1e;
+				}
 				image{
 					width: 25rpx;
 					height: 31rpx;

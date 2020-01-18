@@ -83,7 +83,7 @@
 		</view>
 		<!-- v-if="isOpenDate == 0"  0:关店  1：开店 -->
 		<view class="bottomFix" >
-			<view class="contact">
+			<view @tap="toChat" class="contact">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
 			</view>
@@ -117,15 +117,48 @@
 				starIndex:[0,1,2,3,4],
 				picture:[],
 				isOpenDate: '',
-				isCollect:''
+				isCollect:'',
+				sellerdata:''
 			}
 		},
 		methods:{
+			async toChat(){
+				if(this.sellerdata.isFalse == 1){
+					uni.showToast({
+						title:'该商家不在线，请您电话联系',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				console.log(222)
+				let name = ''
+				this.$store.commit('resetCurrentConversation')
+				this.$store.commit('resetGroup')
+				const {data:res} = await this.tim.getConversationProfile(`C2C${this.sellerdata.userId}`)
+				console.log(res)
+				name = res.conversation.userProfile.nick
+				this.$store.commit('updateCurrentConversation',res.conversation)
+				this.$store.dispatch('getMessageList')
+				uni.navigateTo({
+					url:'/pages/msg/chat?toAccount=' + name
+				})
+			},
 			toCollect(){
 				if(this.isCollect == 0){
-					this.isCollect = 1;
+					this.isCollect = 1
+					uni.showToast({
+						title:'收藏成功',
+						icon:'none',
+						duration:1500
+					})
 				}else{
-					this.isCollect = 0;
+					this.isCollect = 0
+					uni.showToast({
+						title:'取消收藏成功',
+						icon:'none',
+						duration:1500
+					})
 				}
 				likemodel.like(this.data.id,this.data.firsttypeId,this.isCollect,(data)=>{
 					// likemodel.getCollectgood(1,(res)=>{
@@ -161,6 +194,7 @@
 				this.data = data.houseList[0]
 				this.isCollect = data.isCollect
 				storemodel.getSellerInfo({sellerId: this.data.sellerId},(res)=>{
+					this.sellerdata = res
 					this.isOpenDate = res.isOpenDate;
 				})
 				this.data.mainScore = parseInt(this.data.mainScore)

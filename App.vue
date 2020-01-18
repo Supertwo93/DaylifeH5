@@ -299,8 +299,9 @@
 		justify-content: space-between;
 		align-items: center;
 		.title{
+			padding-left: 6rpx;
 			border-left: 8rpx solid #FF6600;
-			font-size:28rpx;
+			font-size:30rpx;
 			font-weight:400;
 			color:rgba(60,60,60,1);
 		}
@@ -311,6 +312,7 @@
 			font-weight:400;
 			color:rgba(120,120,120,1);
 			image{
+				margin-left: 6rpx;
 				width:24rpx;
 				height:26rpx;
 			}
@@ -329,7 +331,7 @@
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
-		z-index: 100;
+		z-index: 1;
 		.collect{
 			width:45rpx;
 			margin-left: 34rpx;

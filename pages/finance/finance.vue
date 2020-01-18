@@ -134,4 +134,7 @@
 </script>
 
 <style lang="scss">
+	page{
+		background-color: #f2f2f2;
+	}
 </style>

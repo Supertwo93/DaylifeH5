@@ -2,7 +2,7 @@
 	<view class="">
 		<view class="fix_top_box">
 			<view class="top-Location" @tap="showMulLinkageThreePicker">
-				<text>{{pickerText}}</text><image class="drop-down" src="/static/cut/drop-down.png" mode=""></image>
+				<text>{{location}}</text><image class="drop-down" src="/static/cut/drop-down.png" mode=""></image>
 			</view>
 			<view class="top-search">
 				<view>
@@ -13,21 +13,21 @@
 			</view>
 		</view>
 		<view class="now_fixed">
-			<view class="nf_left">当前定位：<text>{{fixed_txt}}</text></view>
+			<view class="nf_left">当前定位：<text>{{location}}</text></view>
 			<view class="nf_right"><image src="/static/cut/aim_icon.png" mode=""></image>重新定位</view>
 		</view>
 		<scroll-view scroll-y="true" class="address_scroll_box" >
 			<view class="scroll_list">
 				<view class="scroll_title">我的收获地址</view>
 				<view class="scroll_item_box">
-					<view class="scroll_item" v-for="(mine,idx) in my_address" :key="idx">
+					<view @tap="chooseRecieveAddress(mine)" class="scroll_item" v-for="(mine,idx) in my_address" :key="idx">
 						<view class="si_title">{{mine.receiverAddress}}</view>
 						<view class="si_info">{{mine.receiverName}}<text>{{mine.receiverPhone}}</text></view>
 					</view>
 				</view>
 				<view class="scroll_title">附近地址</view>
 				<view class="scroll_item_box">
-					<view class="scroll_item" v-for="(item,index) in near_address" :key="index">
+					<view class="scroll_item" @tap="chooseNearbyAddress(item)" v-for="(item,index) in near_address" :key="index">
 						<view class="si_title">{{item.name}}</view>
 						<view class="si_info">{{item.addr}}<text>{{item.phone}}</text></view>
 					</view>
@@ -41,6 +41,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import {mapMutations} from 'vuex'
 import mpvueCityPicker from '../../../components/mpvue-citypicker/mpvueCityPicker.vue'
 import {IndexModel} from '@/common/models/index.js'
 const indexmodel = new IndexModel()
@@ -51,7 +52,7 @@ export default{
 			second:false,
 			cityPickerValueDefault: [0, 0, 1],
 			themeColor:"#FF6600",
-			pickerText: '北京',
+			pickerText: '',
 			fixed_txt: '志联佳大厦',
 			my_address: [
 			],
@@ -67,25 +68,23 @@ export default{
 			}
 		}
 	},
-	onLoad(){
-		this.nearbyQuery.location = this.lat + ',' + this.lon
+	onLoad(options){
+		this.pickerText = options.data
 		this.getNearbyList()
 		this.getReceiveAddress()
 	},
 	computed:{
-		...mapState(['lat','lon'])
+		...mapState(['lat','lon','location'])
 	},
 	components: {
 		mpvueCityPicker
 	},
 	methods:{
+		...mapMutations(['getLat','getLon','setLocation']),
 		getNearbyList(){
-			uni.request({
-				url:'http://api.map.baidu.com/reverse_geocoding/v3/',
-				data:this.nearbyQuery,
-				success: (res) => {
-					this.near_address = res.data.result.pois
-				}
+			this.nearbyQuery.location = this.lat + ',' + this.lon
+			this.$jsonp('https://api.map.baidu.com/reverse_geocoding/v3/',this.nearbyQuery).then(json =>{
+				this.near_address = json.result.pois
 			})
 		},
 		getReceiveAddress(){
@@ -106,6 +105,36 @@ export default{
 			console.log(data);
 			this.pickerText = data.label.split('-')[0];
 			console.log(this.pickerText)
+		},
+		chooseRecieveAddress(value){
+			let req = {}
+			req.address = value.receiverCity + value.receiverDistrict + value.receiverAddress
+			req.city = value.receiverCity
+			req.ak = 'HxzxzR81OgNB9Z1izacsQMeq4A9Ii0ck'
+			req.output = 'json'
+			this.setLocation(value.receiverAddress)
+			let that = this 
+			this.$jsonp('http://api.map.baidu.com/geocoding/v3/',req).then(json =>{
+				const {result:res} = json
+				that.getLat(res.location.lat)
+				that.getLon(res.location.lng)
+				that.getNearbyList()
+			})
+		},
+		chooseNearbyAddress(item){
+			let req = {}
+			req.address = item.addr
+			req.ak = 'HxzxzR81OgNB9Z1izacsQMeq4A9Ii0ck'
+			req.output = 'json'
+			this.setLocation(item.name)
+			let that = this
+			this.$jsonp('http://api.map.baidu.com/geocoding/v3/',req).then(json =>{
+				const {result:res} = json
+				console.log(json)
+				that.getLat(res.location.lat)
+				that.getLon(res.location.lng)
+				that.getNearbyList()
+			})
 		}
 	}
 }

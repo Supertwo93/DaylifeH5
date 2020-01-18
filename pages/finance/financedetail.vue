@@ -129,9 +129,19 @@ export default{
 	methods:{
 		toCollect(){
 			if(this.data.isCollect == 0){
-				this.data.isCollect = 1;
+				this.data.isCollect = 1
+				uni.showToast({
+					title:'收藏成功',
+					icon:'none',
+					duration:1500
+				})
 			}else{
-				this.data.isCollect = 0;
+				this.data.isCollect = 0
+				uni.showToast({
+					title:'取消收藏成功',
+					icon:'none',
+					duration:1500
+				})
 			}
 			likemodel.like(this.data.id,this.data.firstTypeId,this.data.isCollect,(data)=>{
 				

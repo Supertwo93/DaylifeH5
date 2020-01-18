@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import conversation from './conversation.js'
+import user from './user.js'
+import global from './global.js'
+import group from './group.js'
 // import state from './state'
 // import mutations from './mutations'
 
@@ -12,7 +16,8 @@ export default new Vuex.Store({
 		myScore: 0,
 		signCount: 0,
 		lat:0,
-		lon:0
+		lon:0,
+		location:'',
 	}, 
 	mutations:{
 		// 签到积分+10
@@ -67,6 +72,15 @@ export default new Vuex.Store({
 		},
 		getLon(state,longitude){
 			state.lon = longitude
+		},
+		setLocation(state,location){
+			state.location = location
 		}
+	},
+	modules:{
+		conversation,
+		user,
+		global,
+		group
 	}
 })

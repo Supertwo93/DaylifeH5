@@ -57,6 +57,11 @@ export default{
 				cb_confirm:()=>{
 					userModel.getLogout((data)=>{
 						this.logout();
+							this.$store.commit('resetGroup')
+							this.$store.commit('resetUser')
+							this.$store.commit('resetCurrentConversation')
+							this.$store.commit('resetAllConversation')
+							wx.$app.logout()
 						uni.navigateBack({
 							delta: 1
 						})

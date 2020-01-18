@@ -82,6 +82,17 @@
     "h5" : {
         "title" : "天天生活",
 		"template":"index.html",
-        "domain" : "https://sgz.wdttsh.com"
+        "domain" : "https://sgz.wdttsh.com",
+		"devServer" : {
+         // "port" : 8000, //端口号
+          "disableHostCheck" : true,
+          "proxy" : {
+              "/api" : {
+                  "target" : "http://api.map.baidu.com/reverse_geocoding/v3/", //目标接口域名
+                   "changeOrigin" : true,  //是否跨域
+                   "secure" : false  // 设置支持https协议的代理
+             }
+        }
+    }
     }
 }

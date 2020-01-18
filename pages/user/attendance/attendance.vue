@@ -292,6 +292,7 @@
 					this.$api.msg('今日已签到，明日再来');
 				}else{
 					checkModel.getSignIn((data)=>{
+						this.isAttendance = 1
 						this.isClick = 1;
 						console.log(data);
 						this.todayStore = data

@@ -5,6 +5,7 @@ import TIM from 'tim-js-sdk'
 import COS from 'cos-js-sdk-v5'
 import TYPES from '@/common/types.js'
 import BaiduMap from 'vue-baidu-map'
+import VueJsonp from 'vue-jsonp'
 Vue.config.productionTip = false
 
 App.mpType = 'app'
@@ -58,7 +59,7 @@ Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey'
 })
-
+Vue.use(VueJsonp)
 
 let $bus = new Vue()
 wx.$app = tim

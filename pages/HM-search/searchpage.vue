@@ -11,7 +11,7 @@
 				<block v-for="(item,index) in data" :key="index">
 					<item-list :src="item.smallPic" :money="item.price" 
 					:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-					@tap="toDetail(item)" v-on:addcart="addToCart(item)" :distance="item.distance|fixOne"></item-list>
+					v-on:toDetailPage="toDetail(item)" v-on:addcart="addToCart(item)" :distance="item.distance|fixOne"></item-list>
 				</block>
 			</block>
 			
@@ -19,7 +19,7 @@
 				<block v-for="(item,index) in data" :key="index">
 					<item-service :src="item.smallPic" :money="item.price" 
 					:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-					:distance="item.distance|fixOne" @tap="toDetail(item)"></item-service>
+					:distance="item.distance|fixOne" @toNextPage="toDetail(item)"></item-service>
 				</block>
 			</block>
 		</view>
@@ -62,9 +62,17 @@
 				data:''
 			}
 		},
+		methods:{
+			toDetail(item){
+				uni.navigateTo({
+					url:`/page/provide/detail?sellerId=${item.sellerId}&id=${item.id}&type=${this.type}&distance=${item.distance}`
+				})
+			},
+		},
 		onLoad(options){
 			this.type = options.type
 			this.key = options.key
+			console.log(options)
 			let req = {}
 			req.title = this.key
 			req.latitude = this.lat
@@ -74,6 +82,7 @@
 			req.goodsFirsttype = this.type
 			indexmodel.getIndexData(req,data=>{
 				this.data = data
+				console.log(data)
 			})
 		}
 	}

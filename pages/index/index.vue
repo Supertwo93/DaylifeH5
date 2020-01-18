@@ -3,7 +3,7 @@
 		<view class="top_fixed">
 			<view @tap="toSelectFixed()">
 				<image src="/static/cut/fixed_icon.png" mode=""></image>
-				<text>{{pickerText}}</text>
+				<text>{{location}}</text>
 			</view>
 			<image src="/static/cut/mess_icon.png" @tap="toMessage()" mode=""></image>
 		</view>
@@ -133,7 +133,7 @@
 								</view>
 								<text class="volume">月销{{item.monthSale}}</text>
 								<text class="volume">免费配送</text>
-								<image src="/static/cut/car.png" mode=""></image>
+								<image @tap.stop="addToCart(item)" src="/static/cut/car.png" mode=""></image>
 							</view>
 						</view>
 					</view>
@@ -148,6 +148,8 @@
 </template>
 
 <script>
+	import {ProvideModel} from '@/common/models/provide.js'
+	const providemodel = new ProvideModel()
 	import tool from "@/common/common.js"
 	import bmap from '@/common/SDK/bmap-wx.js';
 	import {IndexModel} from '@/common/models/index.js'
@@ -195,10 +197,10 @@
 			}
 		},
 		computed:{
-			...mapState(['hasLogin','lat','lon','uerInfo'])
+			...mapState(['hasLogin','lat','lon','uerInfo','location'])
 		},
 		onLoad() {
-			
+			this.getCurrentCity()
 			let that = this
 			// uni.getLocation({
 			//     type: 'wgs84',
@@ -246,13 +248,23 @@
 	
 		},
 		onShow(){
-			this.getCurrentCity()
+			this.pagelfunm = 1
+			this.getprovide(this.pagelfunm)
 		},
 		onReady(){
 			this.loadData()					
 		},
 		methods: {
-			...mapMutations(['getLat','getLon']),
+			...mapMutations(['getLat','getLon','setLocation']),
+			addToCart(item){
+				providemodel.addCart({goodsItemId:item.defaultItemId,num:1},(data)=>{
+					uni.showToast({
+						title:"添加购物车成功",
+						duration:1500,
+						icon:'none'
+					})
+				})
+			},
 			getCurrentCity(){
 				getCurrentCityName.init().then(BMap=>{
 					const geolocation = new BMap.Geolocation()
@@ -262,11 +274,9 @@
 							console.log(position)
 							let city = position.address.city
 							let province = position.address.province
-							that.pickerText = city
+							that.setLocation(city)
 							that.getLat(position.point.lat)
 							that.getLon(position.point.lng)
-							console.log(city)
-							
 						},
 						function(e){
 							console.log(e)
@@ -277,7 +287,7 @@
 			},
 			toSelectFixed(){
 				uni.navigateTo({
-					url: '/pages/index/fixed/select_fixed'
+					url: '/pages/index/fixed/select_fixed?data=' + this.pickerText
 				})
 			},
 			toDynamicUser(){
@@ -430,8 +440,8 @@
 					url:`/pages/HM-search/HM-search?type=${type}`
 				});
 			},	
-			 getprovide (pagelfunm){
-				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10},data=>{
+			getprovide (pagelfunm){
+				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10,goodsFirsttype:8},data=>{
 					if(data.length==0){
 						this.loadingType = 'nomore'
 						return
@@ -480,10 +490,10 @@
 				this.getprovide (this.pagelfunm)
 		}),
 		onBackPress() { //监听页面返回
-		  if (this.$refs.mpvueCityPicker.showPicker) {
-		  	this.$refs.mpvueCityPicker.pickerCancel();
-		    return true;
-		  }
+			if (this.$refs.mpvueCityPicker.showPicker) {
+				this.$refs.mpvueCityPicker.pickerCancel();
+				return true;
+			}
 		},
 		onUnload() {  //监听页面卸载
 			if (this.$refs.mpvueCityPicker.showPicker) {
@@ -521,6 +531,7 @@
 						background:rgba(255,102,0,1);
 					}
 					.word{
+						font-weight: 500;
 						font-size:32rpx;
 						margin-left: 10rpx;
 					}
@@ -696,6 +707,7 @@
 				}
 			}
 			.top-search{
+				border-radius: 8rpx;
 				flex: 1;
 				height: 64rpx;
 				display: flex;
@@ -704,7 +716,7 @@
 				background-color:#F6F6F6 ;
 				padding:0 20rpx;
 				.lf{
-					width: 28rpx;
+					width: 27rpx;
 					height: 28rpx;
 					
 				}
@@ -899,6 +911,7 @@
 							display: flex;
 							justify-content: space-between;						
 							.tit{
+								font-size:28rpx;
 								max-height: 80rpx;
 								overflow: hidden;
 								font-weight:400;
@@ -924,7 +937,7 @@
 								color: #FF6600;								
 							}
 							.volume{
-								font-size:22rpx;					
+								font-size:24rpx;					
 								color:rgba(180,180,180,1);								
 							}
 							image{

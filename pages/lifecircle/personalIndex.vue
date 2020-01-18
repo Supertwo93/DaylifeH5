@@ -274,19 +274,8 @@
 				})
 			},
 			toStore(){
-				if (window.android) {
-					let num = this.type==0?'1':'2'
-					window.android.toShop(this.storeInfo.sellerId,num,this.storeInfo.firstTypeId);
-				}else if(window.webkit){
-					// window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
-					if(this.type==0){
-						window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
-					}else{
-						window.webkit.messageHandlers.getOtherStore.postMessage(this.sellerId)
-					}
-					
-				}else{
-					console.log(this.storeInfo)
+				let ua = navigator.userAgent.toLowerCase()
+				if(ua.match(/MicroMessenger/i)=="micromessenger"){
 					if(this.type==0){
 						uni.navigateTo({
 							url:`/pages/shop/myStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
@@ -296,7 +285,31 @@
 							url:`/pages/shop/theStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
 						})
 					}
+				}else{
+					if (window.android) {
+						let num = this.type==0?'1':'2'
+						window.android.toShop(this.storeInfo.sellerId,num,this.storeInfo.firstTypeId);
+					}else if(window.webkit){
+						// window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
+						if(this.type==0){
+							window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
+						}else{
+							window.webkit.messageHandlers.getOtherStore.postMessage(this.sellerId)
+						}
+						
+					}else{
+						if(this.type==0){
+							uni.navigateTo({
+								url:`/pages/shop/myStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
+							})
+						}else{
+							uni.navigateTo({
+								url:`/pages/shop/theStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
+							})
+						}
+					}
 				}
+				
 			}
 		}
 	}

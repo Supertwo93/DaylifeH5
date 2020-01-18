@@ -47,7 +47,7 @@
 		background-color: #FFFFFF;
 
 		.top-search{
-		
+			border-radius: 8rpx;
 			height: 64rpx;
 			display: flex;
 			align-items: center;

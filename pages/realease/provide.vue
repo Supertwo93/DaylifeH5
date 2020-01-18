@@ -46,7 +46,7 @@
 			<view class="star">商品价格</view>
 			<input v-model="goodsPrice" placeholder="请输入"/>
 		</view>
-		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
+		<view v-if="firstTypeId==8" class="listItem">
 			<view class="star">配送费</view>
 			<input v-model="goodsPost" placeholder="请输入"/>
 		</view>
@@ -54,13 +54,13 @@
 		<!-- 代购发布显示 start -->
 		<view v-if="firstTypeId==10" class="listItem">
 			<view class="star no">进口税费</view>
-			<input placeholder="0元则为免税费"/>
+			<input v-model="importPrice" placeholder="0元则为免税费"/>
 		</view>
 		<!-- 代购发布 end -->
 		
 		<!-- 店铺内商品所属分类 -->
 		<view class="category">
-			<view class="top"><view class="title">店铺内商品所属分类</view><view class="addOk">添加完成</view></view>
+			<view class="top"><view class="title">店铺内商品所属分类</view></view>
 			<view class="category start">
 				<view class="gray">已有分类</view>
 				<view class="buttons">
@@ -328,7 +328,7 @@
 		<!-- 金融发布 end -->
 		
 		<!-- 维修发布 start -->
-		<view v-if="firstTypeId!=8" class="remark_box">
+		<view v-if="firstTypeId!=8&&firstTypeId!=10" class="remark_box">
 			<view class="rel_title"><text v-if="firstTypeId!=5">服务详情</text><text v-if="firstTypeId==5">业务详情</text></view>
 			<textarea v-model="detail" placeholder="可以简单介绍一下.." />
 		</view>
@@ -436,7 +436,7 @@ export default{
 			deliverySelect: [
 				{
 					name: "请选择",
-					amount: 0,
+					amount: 1,
 					isAdd: false
 				}
 			],
@@ -486,13 +486,17 @@ export default{
 				}
 			],
 			rangeArry:[],
-			selectIndex: 0
+			selectIndex: 0,
+			importPrice:''
 		}
 	},
 	computed:{
 		...mapState(['lat','lon'])
 	},
 	onLoad(){
+		
+	},
+	onShow(){
 		this.getCateList()
 		new Promise((resolve)=>{
 			usermodel.getInfo((data)=>{
@@ -508,7 +512,9 @@ export default{
 			}).then((data)=>{
 				this.firstType = data.firstType
 				this.firstTypeId = data.firstTypeId
-				console.log(this.firstTypeId)
+				uni.setNavigationBarTitle({
+					title:data.nickName
+				})
 				return new Promise((resolve)=>{
 					providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
 						resolve(data)
@@ -560,9 +566,6 @@ export default{
 				})
 			})
 		})
-	},
-	onShow(){
-		
 	},
 	onReady(){
 		
@@ -783,16 +786,81 @@ export default{
 				}
 				let goodsJSON = JSON.stringify(req)
 				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					uni.navigateTo({
+						url:'/pages/realease/success'
+					})
+				})
+			}else if(this.firstTypeId==10){
+				if(this.demand_parent_idx==null){
 					uni.showToast({
-						title:'发布成功',
+						title:'请选择服务商子类',
 						duration:1500,
 						icon:'none'
 					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						})
-					},1500)
+					return
+				}
+				if(this.goodsName==''){
+					uni.showToast({
+						title:'请输入商品名称',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsPrice==''){
+					uni.showToast({
+						title:'请输入商品价格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].image==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.goods = {}
+				req.goods.goodsFirsttype = 10
+				req.goods.goodsName = this.goodsName
+				req.goods.goodsSecondtype = this.secondtypeinfoId
+				req.goods.latitudeLongitude = this.lon + ',' + this.lat
+				req.goods.importPrice = this.importPrice
+				req.goods.price = this.goodsPrice
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.sellerId
+				req.goods.normalPrice = ''
+				req.goodsDesc = {}
+				req.goodsDesc.itemImages = this.goods_photos.join(',')
+				req.itemList = this.$refs.specData.specLists
+				for(let i of req.itemList){
+					delete i.isAdd
+				}
+				let goodsJSON = JSON.stringify(req)
+				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					uni.navigateTo({
+						url:'/pages/realease/success'
+					})
 				})
 			}else if(this.firstTypeId==1){
 				if(this.demand_parent_idx==null){
@@ -1042,15 +1110,8 @@ export default{
 				}
 				req.informationList = JSON.stringify(req.informationList)
 				providemodel.addHouse(req,(data)=>{
-					uni.showToast({
-						title:'上传成功',
-						duration:1500,
-						icon:'none'
-					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						},1500)
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
 				})
 			}else if(this.firstTypeId==5&&this.item=='财务代理'){
@@ -1122,27 +1183,20 @@ export default{
 				req.releaseFinance.sellerId = this.sellerId
 				req.releaseFinance.title = this.serviceName
 				req.releaseFinance.userId = this.userId
-				req.specList = []
+				req.releaseFinance.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.specsList = []
 				for(let i of this.$refs.specData.specLists){
 					let obj = {}
 					obj.specsPicture = i.image
 					obj.specsName = i.spec
 					obj.specsPrice = i.price
-					req.specList.push(obj)
+					req.specsList.push(obj)
 				}
 				let financeJSON = JSON.stringify(req)
 				providemodel.addFinance({financeJSON },data=>{
-					uni.showToast({
-						title:'发布成功',
-						duration:1500,
-						icon:'none'
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						})
-					},1500)
-					
 				})
 			}else if(this.firstTypeId==5&&this.item=='保险'){
 				if(this.serviceName==''){
@@ -1193,16 +1247,9 @@ export default{
 				req.releaseFinance.sellerGroupId = this.cateIdList[this.cate_idx]
 				let financeJSON = JSON.stringify(req)
 				providemodel.addFinance({financeJSON },data=>{
-					uni.showToast({
-						title:'发布成功',
-						duration:1500,
-						icon:'none'
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						})
-					},1500)
 				})
 			}else if(this.firstTypeId==5&&this.item=='小额贷款'){
 				if(this.serviceName==''){
@@ -1258,16 +1305,9 @@ export default{
 				req.releaseFinance.sellerGroupId = this.cateIdList[this.cate_idx]
 				let financeJSON = JSON.stringify(req)
 				providemodel.addFinance({financeJSON },data=>{
-					uni.showToast({
-						title:'发布成功',
-						duration:1500,
-						icon:'none'
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
-					setTimeout(()=>{
-						uni.reLaunch({
-							url:'/pages/index/index'
-						})
-					},1500)
 				})
 			}else if(this.firstTypeId==3){
 				if(this.serviceName==''){
@@ -1348,16 +1388,9 @@ export default{
 				console.log(req)
 				let goodsJSON = JSON.stringify(req)
 				providemodel.addSellerGoods({goodsJSON},(data)=>{
-					uni.showToast({
-						title:'发布成功',
-						duration:1500,
-						icon:'none'
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						})
-					},1500)
 				})
 			}else if(this.firstTypeId==9){
 				if(this.demand_parent_idx==null){
@@ -1430,16 +1463,9 @@ export default{
 				}
 				let goodsJSON = JSON.stringify(req)
 				providemodel.addSellerGoods({goodsJSON},(data)=>{
-					uni.showToast({
-						title:'发布成功',
-						duration:1500,
-						icon:'none'
+					uni.navigateTo({
+						url:'/pages/realease/success'
 					})
-					setTimeout(()=>{
-						uni.switchTab({
-							url:'/pages/index/index'
-						})
-					},1500)
 				})
 			}
 		}
@@ -1448,10 +1474,13 @@ export default{
 </script>
 
 <style lang="scss">
-.bottom_place{
-	height: 100rpx;
-	margin-top: 20rpx;
-}
+	page{
+		padding-bottom:100rpx;
+	}
+// .bottom_place{
+// 	height: 100rpx;
+// 	margin-top: 20rpx;
+// }
 .upload_btn{
 	position: fixed;
 	width: 100%;
@@ -1459,7 +1488,7 @@ export default{
 	line-height: 100rpx;
 	border-radius: 0;
 	left: 0;
-	bottom: 100rpx;
+	bottom: 0;
 	color: #fff;
 	font-size: 34rpx;
 	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
@@ -1485,7 +1514,7 @@ export default{
 		height:180rpx;
 		border:1rpx solid #A0A0A0;
 		border-radius:8rpx;
-		color: #B4B4B4;
+		color: #1e1e1e;
 		font-size: 26rpx;
 		padding: 15rpx 20rpx;
 	}
@@ -1542,6 +1571,7 @@ export default{
 		padding-left: 10rpx;
 	}
 	input{
+		color:#1e1e1e;
 		font-size: 26rpx;
 	}
 }
@@ -1685,7 +1715,7 @@ export default{
 				padding: 13rpx 20rpx;
 				box-sizing: border-box;
 				input{
-					color: #B4B4B4;
+					color: #1e1e1e;
 					font-size: 26rpx;
 				}
 			}
@@ -1713,7 +1743,7 @@ export default{
 			font-size: 26rpx;
 			padding: 13rpx 20rpx;
 			input{
-				color: #B4B4B4;
+				color: #1e1e1e;
 				font-size: 26rpx;
 				max-width: 52%;
 			}
@@ -1835,6 +1865,7 @@ export default{
 			align-items: center;
 			padding-left: 20rpx;
 			input{
+				color:#1e1e1e;
 				width:160rpx;
 			}
 		}
@@ -1896,6 +1927,7 @@ export default{
 				display: flex;
 			}
 			input{
+				color:#1e1e1e;
 				width:220rpx;
 			}
 		}
@@ -2025,7 +2057,7 @@ export default{
 		margin-top: 20rpx;
 		input{
 			width: 100%;
-			color: #3C3C3C;
+			color: #1e1e1e;
 			font-size: 26rpx;
 		}
 	}
@@ -2081,5 +2113,9 @@ export default{
 		
 	}
 	
+}
+
+input{
+	color:#1e1e1e;
 }
 </style>

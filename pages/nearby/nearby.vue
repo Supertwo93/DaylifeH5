@@ -309,8 +309,9 @@
 				display: flex;
 				justify-content: space-between;
 				.title{
-					font-size:28rpx;
+					font-size:32rpx;
 					color:#1E1E1E;
+					font-weight: bolder;
 				}
 			}
 			.middle{

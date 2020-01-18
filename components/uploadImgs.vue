@@ -1,6 +1,6 @@
 <template name="uploadImgs">
 	<view class="upload_img_box">
-		<image @tap="selectPhoto" class="add_img" src="/static/cut/upload_photo.png" mode="widthFix"></image>
+		<image v-if="photos.length<6" @tap="selectPhoto" class="add_img" src="/static/cut/upload_photo.png" mode="widthFix"></image>
 		<view class="image_item" @tap="previewImage(index)" v-for="(item,index) in photos" :key="index">
 			<image class="img" :src="item" mode="aspectFill"></image>
 			<view class="del_icon" @tap.stop="deletePhoto(index)"><image src="/static/cut/delete.png" mode="widthFix"></image></view>

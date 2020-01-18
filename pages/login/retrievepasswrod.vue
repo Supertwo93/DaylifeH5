@@ -2,17 +2,17 @@
 	<view>
 		<view class="retrieve">
 				 	<view class="item">
-						<view class="iconfont icon-shouji"></view>
+						<image class="icon" src="../../static/cut/phone.png"></image>
 						<input placeholder="请输入手机号" v-model="phoneNumber"/>
 					</view>	
 					<view class="item">
-						<view class="iconfont icon-yanzhengma"></view>
+						<image class="icon1" src="../../static/cut/checkok.png"></image>
 						<input placeholder="请输入验证码" v-model="verificationCode"/>
 						<view v-if="sendAuthCode" class="verification-code"  @tap="getAuthCode">获取验证码</view>
 						<view v-if="!sendAuthCode">{{auth_time}}s</view>
 					</view>	
 					<view class="item">
-						<view class="iconfont icon-mima"></view>
+						<image class="icon2" src="../../static/cut/lock.png"></image>
 						<input placeholder="设置密码" v-model="loginPassword"/>				
 					</view>			
 					<view class="theme-button" @tap="doLogin">确定</view>
@@ -103,6 +103,21 @@ export default {
 </script>
 
 <style lang="scss">
+	.icon{
+		width:26rpx;
+		height:34rpx;
+		margin-right: 10rpx;
+	}
+	.icon1{
+		width:26rpx;
+		height:30rpx;
+		margin-right: 10rpx;
+	}
+	.icon2{
+		width:26rpx;
+		height:30rpx;
+		margin-right: 10rpx;
+	}
 	.retrieve{
 		margin:80rpx;
 		.item{

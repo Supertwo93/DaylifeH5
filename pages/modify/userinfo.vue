@@ -52,17 +52,17 @@
 			<view class="descri">我的地址</view>
 			<view class="iconfont icon-dibudaohanglan-"></view>
 		</view>
-		<view v-if="uerInfo.personalCerStatus==1" class="cert general" @tap="certification()">
+		<!-- <view v-if="uerInfo.personalCerStatus==1" class="cert general" @tap="certification()">
 			<view class="descri">个人认证</view>
 			<view class="detail" >
 				<view class="certification">去认证</view>
 				<view class="iconfont icon-dibudaohanglan-"></view>
 			</view>
-		</view>
-		<view v-else class="cert general">
+		</view> -->
+		<!-- <view v-else class="cert general">
 			<view class="descri">个人认证</view>
 			<view class="detail">已认证</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 

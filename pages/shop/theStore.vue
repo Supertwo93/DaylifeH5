@@ -9,10 +9,11 @@
 						<view>{{sellerData.nickName}}</view>
 						<image src="/static/cut/company_cer.png"></image>
 					</view>
-					<image src="/static/cut/no_collect.png"></image>
+					<image @tap="toCollect(1)" v-if="sellerData.isCollect==0" src="/static/cut/no_collect.png"></image>
+					<image v-else @tap="toCollect(0)" src="/static/cut/collected.png"></image>
 				</view>
 				<view class="address">
-					<text class="gray">深圳市龙岗区龙翔大道9002号志联佳大厦508</text>
+					<text class="gray">{{sellerData.address}}</text>
 				</view>
 				<view class="score">
 					<block v-for="(item,index) in starIndex" :key="index">
@@ -41,7 +42,7 @@
 						<view class="title">
 							<view>{{item.title}}</view>
 						</view>
-						<view class="goods" v-for="(item2,index2) in item.list" :key="index2">
+						<view @tap="toDetail(item2)" class="goods" v-for="(item2,index2) in item.list" :key="index2">
 							<image v-if="typeId!=1&&typeId!=5" :src="item2.smallPic" mode=""></image>
 							<image v-if="typeId==1||typeId==5" :src="item2.picture.split(',')[0]" mode=""></image>
 							<view class="content">
@@ -60,11 +61,11 @@
 		</view>
 		
 		<view class="buttons">
-			<view class="whiteButton">
+			<view @tap="toChat" class="whiteButton">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
 			</view>
-			<view class="cartButton">购物车</view>
+			<view @tap="toCart" class="cartButton">购物车</view>
 		</view>
 	</view>
 
@@ -137,6 +138,53 @@
 			this.getListData();
 		},
 		methods: {
+			async toChat(){
+				if(this.sellerData.isFalse == 1){
+					uni.showToast({
+						title:'该商家不在线，请您电话联系',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				console.log(222)
+				let name = ''
+				this.$store.commit('resetCurrentConversation')
+				this.$store.commit('resetGroup')
+				const {data:res} = await this.tim.getConversationProfile(`C2C${this.sellerData.userId}`)
+				console.log(res)
+				name = res.conversation.userProfile.nick
+				this.$store.commit('updateCurrentConversation',res.conversation)
+				this.$store.dispatch('getMessageList')
+				uni.navigateTo({
+					url:'/pages/msg/chat?toAccount=' + name
+				})
+			},
+			
+			toDetail(item){
+				console.log(item)
+				if(this.typeId!=5&&this.typeId!=1){
+					uni.navigateTo({
+						url:`/pages/provide/detail?sellerId=${item.sellerId}&id=${item.id}&type=${item.goodsFirsttype}`
+					})
+				}else if(this.typeId==1){
+					uni.navigateTo({
+						url:'/pages/house/housedetail?data='+item.id
+					})
+				}else if(this.typeId==5){
+					uni.navigateTo({
+						url:'/pages/finance/financedetail?financeId=' + item.financeId + '&code=' + item.financeCode + '&sellerId=' + item.sellerId
+					})
+				}
+			},
+			
+			
+			toCart(){
+				uni.switchTab({
+					url:'/pages/order/order'
+				})
+			},
+			
 			/* 获取列表数据 */
 			getListData(){
 				/* 因无真实数据，当前方法模拟数据 */
@@ -312,6 +360,29 @@
 				this.leftIndex=Number(index);
 				this.scrollInto=`item-${index}`;
 				
+			},
+			toCollect(num){
+				if(num==1){
+					this.sellerData.isCollect = 1
+					uni.showToast({
+						title:'收藏成功',
+						duration:1500,
+						icon:'none'
+					})
+					Likemodel.likeShop(this.sellerData.sellerId,1,data=>{
+						
+					})
+				}else{
+					this.sellerData.isCollect = 0
+					uni.showToast({
+						title:'取消收藏成功',
+						duration:1500,
+						icon:'none'
+					})
+					Likemodel.likeShop(this.sellerData.sellerId,0,data=>{
+						
+					})
+				}
 			},
 			addCart(item){
 				providemodel.addCart({goodsItemId:item.defaultItemId,num:1},(data)=>{

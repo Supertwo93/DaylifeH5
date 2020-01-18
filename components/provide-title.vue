@@ -1,11 +1,8 @@
 <template name="provideTitle">
 	<view class="box">
 		<view class="top">
-			<view class="price">￥<text>{{price}}</text></view>
-			<view class="share">
-				<image src="/static/cut/share.png"></image>
-				分享
-			</view>
+			<view class="price"><text>￥{{price}}</text></view>
+			<image class="share" src="/static/cut/sharecut.png"></image>
 		</view>
 		<view class="middle">
 			{{title}}
@@ -71,22 +68,8 @@ export default {
 			}
 		}
 		.share{
-			display: flex;
-			justify-content: center;
-			align-items: center;
 			width:114rpx;
-			height:40rpx;
-			background:rgba(240,240,240,1);
-			border-radius:20rpx 0rpx 0rpx 20rpx;
-			font-size:24rpx;
-			font-weight:400;
-			color:rgba(180,180,180,1);
-			line-height:40rpx;
-			image{
-				width:24rpx;
-				height:24rpx
-			}
-			
+			height:50rpx;
 		}
 	}
 	.middle{
