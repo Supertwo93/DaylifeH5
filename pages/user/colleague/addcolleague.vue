@@ -41,7 +41,8 @@
 				this.phone = ''
 			},
 			add(user){
-				usermodel.addColleague({content:'你好',userId:user.userId},data=>{
+				console.log(user)
+				usermodel.addColleague({content:'你好',userId:user.appuserId},data=>{
 					uni.showToast({
 						title:'添加成功',
 						duration:1500,

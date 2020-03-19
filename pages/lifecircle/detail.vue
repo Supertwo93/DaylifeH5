@@ -311,10 +311,10 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page{
 		background-color: #f2f2f2;
-		// padding-bottom: 110rpx;
+		height:100vh;
 	}
 	.box{
 		margin-top: 20rpx;
@@ -522,4 +522,51 @@
 			margin-left: 299rpx;
 		}
 	}
+	
+	@media (prefers-color-scheme: dark) { 
+		page{
+			background-color: #141414;
+		}
+		
+		.back{
+			background-color: #141414;
+		}
+		
+		.box{
+			background-color: #2D2D2D;
+			.user{
+				.info{
+					.nickName{
+						color: #fff;
+					}
+				}
+			}
+			.content{
+				color: #fff;
+			}
+		}
+		
+		.commentList{
+			background-color: #2d2d2d;
+			.top{
+				.lf{
+					.info{
+						.name{
+							color: #fff;
+						}
+					}
+				}
+			}
+			.middle{
+				color:#fff;
+			}
+			.bottom{
+				background-color: #3C3C3C;
+			}
+		}
+		
+	}
+	
+	
+	
 </style>

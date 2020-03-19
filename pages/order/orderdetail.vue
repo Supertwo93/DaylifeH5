@@ -34,7 +34,7 @@
 				<view class="total">合计:￥{{orderList.payment}}</view>
 			</view>
 			<view v-if="orderList.firsttypeId==1" class="type">
-				<store-title :title="orderList.nickName"></store-title>
+				<store-title :title="orderList.sellerNickName"></store-title>
 				<store-main :pic="orderList.picture" :title="orderList.title" :specsize="orderList.paymentMethod">
 					<view class="fee">
 						<view class="feename">押金</view>
@@ -59,20 +59,32 @@
 			
 		</view>
 		
+		<view class='contact'>
+			<view class='showMessage'>
+				<image src="../../static/cut/message_icon.png"></image>
+				<view>联系TA</view>
+			</view>
+			<view class="tel">
+				<image src="../../static/cut/phone_icon.png"></image>
+				<view>拨打电话</view>
+			</view>
+		</view>
+		
+		
 		<view class="titleInfo">订单信息</view>
 		
 		<view class="info">
 			<view v-if="typeid!=1&&typeid!=5" class="for">
-				<view class="infoTitle">订单编号 {{orderList.orderId}}</view>
+				<view class="infoTitle">订单编号: <text>{{orderList.orderId}}</text></view>
 			</view>
 			<view v-if="typeid!=1&&typeid!=5" class="for">
-				<view class="infoTitle">创建时间 {{orderList.createTime}}</view>
+				<view class="infoTitle">创建时间: <text>{{orderList.createTime}}</text></view>
 			</view>
 			<view class="for" v-if='index>2'>
-				<view class="infoTitle">付款时间 {{orderList.paymentTime}}</view>
+				<view class="infoTitle">付款时间: <text>{{orderList.paymentTime}}</text></view>
 			</view>
 			<view class="for" v-if="index==4">
-				<view class="infoTitle">接单时间 {{orderList.receiptTime}}</view>
+				<view class="infoTitle">接单时间: <text>{{orderList.receiptTime}}</text></view>
 			</view>
 <!-- 			<view class="for" v-if="index==4">
 				<view class="infoTitle">服务开始 12145464654142</view>
@@ -82,16 +94,6 @@
 				<view class="infoTitle">确认完成 12145464654142</view>
 				<view v-if="row.type=='orderNumber'" class="copy">复制</view>
 			</view> -->
-			<view class='contact'>
-				<view class='showMessage'>
-					<image src="../../static/cut/message.png"></image>
-					<view>联系TA</view>
-				</view>
-				<view class="tel">
-					<image src="../../static/cut/phone_icon.png"></image>
-					<view>拨打电话</view>
-				</view>
-			</view>
 		</view>
 		
 		<view class="button">
@@ -269,6 +271,8 @@ page{
 }
 
 .location{
+	border-radius: 30rpx;
+	margin-bottom: 20rpx;
 	width:100%;
 	height:180rpx;
 	background-color: #fff;
@@ -320,6 +324,7 @@ page{
 }
 
 .type{
+	border-radius: 30rpx;
 	padding:0 20rpx 20rpx 20rpx;
 	background-color: #fff;
 }
@@ -334,6 +339,7 @@ page{
 	margin-top: 20rpx;
 }
 
+
 .titleInfo{
 	height:62rpx;
 	font-size:24rpx;
@@ -343,18 +349,23 @@ page{
 	padding-left:20rpx;
 }
 .info{
+	border-radius: 30rpx;
 	background-color: #fff;
 	.for{
 		display: flex;
 		height:84rpx;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom:1rpx solid #f2f2f2;
 		font-weight:400;
 		color:rgba(60,60,60,1);
 		.infoTitle{
 			margin-left:20rpx;
 			margin-right:20rpx;
+			text{
+				margin-left: 30rpx;
+				font-size:20rpx;
+				color:#1e1e1e;
+			}
 		}
 		.infoNumber{
 			
@@ -366,29 +377,43 @@ page{
 			color:rgba(255,102,0,1);
 		}
 	}
-	.contact{
-		height:84rpx;
+}
+
+.contact{
+	border-radius: 30rpx;
+	margin-top: 20rpx;
+	background-color: #fff;
+	height:84rpx;
+	display: flex;
+	.showMessage{
 		display: flex;
-		.showMessage{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width:50%;
-			image{
-				width:28rpx;
-				height:28rpx;
-			}
+		align-items: center;
+		justify-content: center;
+		width:50%;
+		image{
+			width:28rpx;
+			height:28rpx;
+			margin-right: 14rpx;
 		}
-		.tel{
-			border-left:1rpx solid #f2f2f2;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width:50%;
-			image{
-				width:28rpx;
-				height:28rpx;
-			}
+		view{
+			font-size:28rpx;
+			color:#0096FF;
+		}
+	}
+	.tel{
+		border-left:1rpx solid #f2f2f2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width:50%;
+		image{
+			width:30rpx;
+			height:30rpx;
+			margin-right: 14rpx;
+		}
+		view{
+			font-size:28rpx;
+			color:#0096FF;
 		}
 	}
 }

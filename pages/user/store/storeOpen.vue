@@ -281,7 +281,7 @@
 					req.linkmanMobile = this.contactPhone
 					req.nickName = this.storeName
 					req.address = this.storeAddress
-					req.latitudeLongitude = `${this.storeLatitude},${this.storeLongitude}`
+					req.latitudeLongitude = `${this.storeLongitude},${this.storeLatitude}`
 					req.logoPic = this.logoImg
 					req.licenseNumber = this.storeLicenseImg
 					req.firstTypeId = this.storeIndex
@@ -290,7 +290,9 @@
 						req.startingAndDeliveringFee = this.deliverMin
 					}
 					usermodel.companyCerAndOpeningStore(req,data=>{
-						
+						uni.reLaunch({
+							url:'submitSuccess'
+						})
 					})
 				}else{
 					let req = {}
@@ -301,7 +303,7 @@
 					req.personalHandCardImg  = this.handImg
 					req.linkmanMobile  = this.contactPhone
 					req.nickName = this.storeName
-					req.latitudeLongitude = `${this.storeLatitude},${this.storeLongitude}`
+					req.latitudeLongitude = `${this.storeLongitude},${this.storeLatitude}`
 					req.logoPic = this.logoImg
 					req.licenseNumber = this.personLicense
 					req.firstTypeId = this.storeIndex
@@ -319,7 +321,9 @@
 						req.startingAndDeliveringFee = this.deliverMin
 					}
 					usermodel.personalCerAndOpeningStore(req,data=>{
-						
+						uni.reLaunch({
+							url:'submitSuccess'
+						})
 					})
 				}
 				

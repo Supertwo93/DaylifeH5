@@ -13,13 +13,20 @@
 					<view class='status'>待支付</view>
 				</view>
 				<view class="billdetail">
-					<block v-for="(row,number) in item.costList" :key="number">
-						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
-					</block>
+					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<view class="price_container">
+						<block v-for="(row,number) in item.costList" :key="number">
+							<view class="price_box" v-if="row.costPrice!=0">
+								<view class="price_name">{{row.costName}}</view>
+								<view class="line">----------------------</view>
+								<view class="price">￥{{row.costPrice}}</view>
+							</view>
+						</block>
+					</view>
 				</view>
 				<view class="billtotal">
 					<view class="total">应缴金额：<text>￥{{item.sum}}</text></view>
-					<view class="whiteButton">去付款</view>
+					<view class="payButton">去付款</view>
 				</view>
 			</view>
 		</view>
@@ -30,9 +37,16 @@
 					<view class='paidstatus'>已支付</view>
 				</view>
 				<view class="billdetail">
-					<block v-for="(row,number) in item.costList" :key="number">
-						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
-					</block>
+					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<view class="price_container">
+						<block v-for="(row,number) in item.costList" :key="number">
+							<view class="price_box" v-if="row.costPrice!=0">
+								<view class="price_name">{{row.costName}}</view>
+								<view class="line">----------------------</view>
+								<view class="price">￥{{row.costPrice}}</view>
+							</view>
+						</block>
+					</view>
 				</view>
 				<view class="billedtotal">
 					<view class="total">实缴金额：<text>￥{{item.sum}}</text></view>
@@ -47,9 +61,16 @@
 					<view class='status'>代收款</view>
 				</view>
 				<view class="billdetail">
-					<block v-for="(row,number) in item.costList" :key="number">
-						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
-					</block>
+					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<view class="price_container">
+						<block v-for="(row,number) in item.costList" :key="number">
+							<view class="price_box" v-if="row.costPrice!=0">
+								<view class="price_name">{{row.costName}}</view>
+								<view class="line">----------------------</view>
+								<view class="price">￥{{row.costPrice}}</view>
+							</view>
+						</block>
+					</view>
 				</view>
 				<view class="billtotal">
 					<view class="total">应收金额：<text>￥{{item.sum}}</text></view>
@@ -64,12 +85,19 @@
 					<view class='paidstatus'>已支付</view>
 				</view>
 				<view class="billdetail">
-					<block v-for="(row,number) in item.costList" :key="number">
-						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
-					</block>
+					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<view class="price_container">
+						<block v-for="(row,number) in item.costList" :key="number">
+							<view class="price_box" v-if="row.costPrice!=0">
+								<view class="price_name">{{row.costName}}</view>
+								<view class="line">----------------------</view>
+								<view class="price">￥{{row.costPrice}}</view>
+							</view>
+						</block>
+					</view>
 				</view>
 				<view class="billtotal">
-					<view class="total">{{item.createDate}}</view>
+					<view class="total"></view>
 					<view class="total">实缴金额：<text>￥{{item.sum}}</text></view>
 				</view>
 			</view>
@@ -145,39 +173,46 @@ page{
 	padding-bottom: 20rpx;
 }
 
+.icon_img{
+	width:150rpx;
+	height:150rpx;
+}
+
 .topTabBar{
 	position:fixed;
 	z-index: 10;
 	top:0;
 	width:100%;
-	height:64rpx;
+	height:78rpx;
 	background-color: #fff;
 	display: flex;
+	align-items: center;
 	justify-content: space-around;
-	border-top:1rpx solid #f2f2f2;
+	border-radius: 0 0 30rpx 30rpx;
 	.grid{
 		width:20%;
-		height:64rpx;
+		height:38rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
-		color:#787878;
+		color:#1E1E1E;
 		font-size:24rpx;
 		.text{
-			height:62rpx;
+			height:48rpx;
 			display: flex;
 			align-items: center;
 			&.on{
 				color:#FF6600;
-				border-bottom: solid 2rpx #FF6600;
+				border-bottom: solid 4rpx #FF6600;
 			}
 		}
 	}
 }
 
 .unpaid{
-	margin-top: 84rpx;
+	margin-top: 100rpx;
 	.item{
+		border-radius: 30rpx;
 		margin-top: 20rpx;
 		background-color: #fff;
 		padding: 39rpx 19rpx 0 19rpx;
@@ -186,9 +221,8 @@ page{
 			justify-content:space-between;
 			.title{
 				font-size:28rpx;
-				font-weight:400;
-				color:rgba(60,60,60,1);
-				line-height:36rpx;
+				font-weight:600;
+				color:#1E1E1E;
 			}
 			.status{
 				font-size:24rpx;
@@ -198,13 +232,26 @@ page{
 			}
 		}
 		.billdetail{
+			display: flex;
 			margin-top:39rpx;
-			border-bottom: 1rpx solid #f2f2f2;
-			view{
-				font-size:24rpx;
-				font-weight:400;
-				color:rgba(100,100,100,1);
-				line-height:54rpx;
+			.price_container{
+				margin-left: 20rpx;
+				.price_box{
+					margin-top: 10rpx;
+					display: flex;
+					align-items: center;
+					.price_name{
+						width:120rpx;
+						color:#505050;
+					}
+					.line{
+						color:#B4B4B4;
+						width:330rpx;
+					}
+					.price{
+						color:#505050;
+					}
+				}
 			}
 		}
 		.billtotal{
@@ -216,8 +263,8 @@ page{
 				color:#a0a0a0;
 				font-size:24rpx;
 				text{
-					color:#FF6600;
-					font-size:30rpx;
+					font-size:36rpx;
+					color:#1E1E1E;
 				}
 			}
 		}
@@ -233,8 +280,8 @@ page{
 		color:#a0a0a0;
 		font-size:24rpx;
 		text{
-			color:#FF6600;
-			font-size:30rpx;
+			color:#1e1e1e;
+			font-size:36rpx;
 		}
 	}
 }
@@ -249,13 +296,20 @@ page{
 	width:160rpx;
 	height:60rpx;
 	background:rgba(255,255,255,1);
-	border:1px solid rgba(200,200,200,1);
-	border-radius:10rpx;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size:26rpx;
-	font-weight:400;
-	color:#8C8C8C;
+	border:1rpx solid rgba(160,160,160,1);
+	border-radius:30rpx;
+	color:#505050;
+	line-height:60rpx;
+	text-align: center;
+}
+
+.payButton{
+	width:160rpx;
+	height:60rpx;
+	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+	border-radius:30rpx;
+	text-align: center;
+	line-height:60rpx;
+	color:#fff;
 }
 </style>

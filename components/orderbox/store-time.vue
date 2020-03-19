@@ -1,6 +1,6 @@
 <template name="storeTime">
 	<view class="time">
-		<view class="payTime gray">{{time|timeDeal}}</view>
+		<view class="payTime gray"></view>
 		<view class="buttons">
 			<block v-if="type=='unpaid'"><view class="default" @tap.stop="cancelOrder">取消订单</view><view class="pay" @tap.stop="toPayment">去付款</view></block>
 			<block v-if="type=='unreceived'"><view class="default" @tap.stop="drawback">退款</view></block>
@@ -74,7 +74,7 @@ export default {
 .time{
 	margin-top: 20rpx;
 	background-color: #fff;
-	border-top: 1rpx solid #f2f2f2;
+	// border-top: 1rpx solid #f2f2f2;
 	height:100rpx;
 	display: flex;
 	justify-content: space-between;
@@ -89,14 +89,14 @@ export default {
 			width:160rpx;
 			height:60rpx;
 			background:rgba(255,255,255,1);
-			border-radius:10rpx;
+			border-radius:30rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;	
 		}
 		.default{
 			border:1rpx solid rgba(200,200,200,1);
-			color:#8C8C8C;
+			color:#646464;
 		}
 		.pay{
 			border:1rpx solid rgba(255,102,0,1);

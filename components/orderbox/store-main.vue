@@ -74,6 +74,7 @@ export default {
 				font-size:24rpx;
 			}
 			.title{
+				color:#1E1E1E;
 				width:420rpx;
 				font-size:28rpx;
 				overflow : hidden;

@@ -1,5 +1,10 @@
 <template>
 	<view>
+		<view class="nav">
+			<image @tap="toBack" src="/static/cut/lifecircle/backto.png"></image>
+			<view class="title">发布动态</view>
+			<view> </view>
+		</view>
 		<textarea placeholder="快快分享你的心情吧~" v-model="content" placeholder-style="color:#A0A0A0"></textarea>
 		<publish-image :photos="goods_photos" @changes="goodsPhoto"></publish-image>
 		<view class="submit-button" @tap="submit">确认发布</view>
@@ -72,15 +77,56 @@
 						}
 					}
 				})
+			},
+			toBack(){
+				uni.navigateBack({
+					delta:1
+				})
 			}
 		},
+		
 	}
 </script>
 
-<style>
-textarea{
-	width:750rpx;
-	padding:20rpx;
+<style lang="scss" scoped>
+page{
 	background-color: #fff;
+	height:100vh;
 }
+
+.nav{
+	display: flex;
+	padding:0 20rpx;
+	align-items: center;
+	justify-content: space-between;
+	height:88rpx;
+	image{
+		width:20rpx;
+		height:34rpx;
+	}
+	.title{
+		font-size:36rpx;
+	}
+}
+
+
+textarea{
+		width:750rpx;
+		padding:20rpx;
+	}
+
+
+@media (prefers-color-scheme: dark) {
+	page{
+		background-color: #2d2d2d;
+	}
+	.nav{
+		.title{
+			color:#fff;
+		}
+	}
+}
+
+
+
 </style>

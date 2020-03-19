@@ -3,15 +3,19 @@
 		<bavigationbar></bavigationbar>
 		<Swiper :swiperImage="swiperImage"></Swiper>
 		<view class="indexChooseType">
-			<view class="title">生活服务</view>
+			<view class="title">
+				<view class="title-border"></view>
+				<view class="title-content">金融服务</view>
+			</view>
 			<view class="icon" @tap="pop()">
-				筛选<image src="/static/cut/filter_icon.png"></image>
+				筛选<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
 			</view>
 		</view>
 		
 		<block v-for="(row,number) in data" :key="number">
 			<item-service :src="row.picture.split(',')[0]" :title="row.title"
-			:money="row.price" :desc="row.loan_rates" @toNextPage="toDetail(number)"></item-service>
+			:money="row.price" :desc="row.loan_rates" @toNextPage="toDetail(number)"
+			:distance="row.distance|fixOne"></item-service>
 		</block>
 		
 		<uni-popup ref="poptop" type="top">
@@ -25,9 +29,9 @@
 				</view>
 				<view class="title">排序</view>
 				<view class="order">
-					<view class="grayButton">价格倒序</view>
-					<view class="grayButton">价格正序</view>
-					<view class="grayButton">距离最近</view>
+					<block v-for="(item,index) in orderItem" :key="index">
+						<view  :class="[orderIndex==index?'secondOn':'grayButton']" @tap="chooseOrder(item,index)">{{item}}</view>
+					</block>
 				</view>
 				<view class="button"  @tap="confirmSecond">确定</view>
 			</view>
@@ -46,7 +50,16 @@
 	import {ProvideModel} from '@/common/models/provide.js'
 	const providemodel = new ProvideModel()
 	let financemodel = new FinanceModel()
+	import {mapState} from 'vuex'
 	export default {
+		computed:{
+			...mapState(['lat','lon'])
+		},
+		filters: {
+			fixOne(value){
+				return parseInt(value/1000).toFixed(1)
+			}
+		},
 		components:{
 			bavigationbar,
 			Swiper,
@@ -61,17 +74,19 @@
 				data:[],
 				typeData:'',
 				secondIndex:null,
-				pageNo:1
+				pageNo:1,
+				orderItem:['价格升序','价格降序','距离最近'],
+				orderIndex:null,
+				orderNum:1
 			}
 		},
 		onLoad(){
 			providemodel.getSwiperImage({position:'金融'},(data)=>{
 				for(let item of data){
 					this.swiperImage.push(item.coverImg)
-					console.log(this.swiperImage)
 				}
 			})
-			let req = {pageNo:1,pageSize:10}
+			let req = {pageNo:this.pageNo,pageSize:10,longitude:this.lon,latitude:this.lat}
 			financemodel.getFinanceList(req,(data)=>{
 				this.data = data
 			})
@@ -83,22 +98,15 @@
 		},
 		onReachBottom(){
 			this.status = 'loading'
-			let len = this.data.length
-			let pageNo = parseInt(len/10)
-			if(len % 10 == 0){
-				pageNo += 1
-			}else if(len % 10 > 0){
-				pageNo += 2
-			}
-			
-			let req = {pageNo,pageSize:10}
+			this.pageNo++
+			let req = {pageNo:this.pageNo,pageSize:10,longitude:this.lon,latitude:this.lat}
 			financemodel.getFinanceList(req,(data)=>{
-				if(data.length == 10){
-					this.data = this.data.concat(data)
-				}else if (data.length>0&&data.length<10){
+				if(data.length>0&&data.length<10){
 					this.data = this.data.concat(data)
 					this.status = 'noMore'
-				}else if(data.length == 0){
+				}else if(data.length==10){
+					this.data = this.data.concat(data)
+				}else{
 					this.status = 'noMore'
 				}
 			})
@@ -128,6 +136,23 @@
 						this.secondId = item.secondtypeinfoId
 					}
 				}
+			},
+			chooseOrder(item,index){
+				if(this.orderIndex==null){
+					this.orderIndex = index
+					this.orderNum = parseInt(index) + 1
+				}else{
+					if(this.orderIndex == index){
+						this.orderIndex = null
+						this.orderNum = 1
+					}else{
+						this.orderIndex = index
+						this.orderNum = parseInt(index) + 1
+					}
+				}
+			},
+			confirmSecond(){
+				this.$refs.poptop.close()
 			}
 		}
 	}

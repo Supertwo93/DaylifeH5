@@ -134,7 +134,7 @@
 
 <style scoped lang="scss">
 	.upload_img_box{
-		background: #fff;
+		background-color: #fff;
 		margin-bottom: 15rpx;
 		padding: 30rpx 20rpx 10rpx;
 		box-sizing: border-box;
@@ -191,6 +191,26 @@
 		.noNumber{
 			background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
 			opacity:0.6;
+		}
+	}
+	
+	@media (prefers-color-scheme:dark) {
+		.upload_img_box{
+			background-color: #2D2D2D;
+			.image_item{
+				border: 1rpx solid #F2F2F2;
+				.del_icon{
+					background: #fff;
+				}
+			}
+		}
+		.upload_btn{
+			color: #fff;
+			background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+			.noNumber{
+				background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+				opacity:0.6;
+			}
 		}
 	}
 </style>

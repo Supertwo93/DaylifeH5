@@ -37,7 +37,7 @@ class StoreModel extends HTTP {
 	getSellerStore(data,success){
 		let params = {
 			method:"POST",
-			url:'/app/seller/findOne',
+			url:'/app/seller/findOneDetailed',
 			data:data,
 			success:success
 		}

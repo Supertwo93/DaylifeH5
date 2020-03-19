@@ -7,7 +7,7 @@
 			<view class="title">我的同事</view>
 			<image @tap="dropDown" class="add" src="/static/cut/addwhite.png"></image>
 			<view v-if="isDrop" class="drop">
-				<view>新的好友</view>
+				<view @tap="toNew">新的好友</view>
 				<view @tap="toAdd">添加好友</view>
 			</view>
 		</view>
@@ -69,6 +69,11 @@
 				uni.navigateTo({
 					url:'/pages/user/colleague/addcolleague'
 				})
+			},
+			toNew(){
+				uni.navigateTo({
+					url: 'newColleague'
+				});
 			}
 		}
 	}

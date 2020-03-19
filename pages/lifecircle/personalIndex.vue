@@ -490,4 +490,42 @@
 			
 		}
 	}
+	
+	@media (prefers-color-scheme: dark){
+		page{
+			background-color: #141414;
+		}
+		.navbar{
+			background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
+		}
+		
+		.myStore{
+			background-color: #2D2D2D;
+			.storeInfo{
+				.title{
+					color:#FFFFFF;
+				}
+				.score{
+					color:#FF6600;
+				}
+			}
+		}
+		.list{
+			background-color: #2d2d2d;
+			.user{
+				.info{
+					.nickName{
+						color: #fff;
+					}
+				}
+			}
+			.content{
+				color:#fff;
+			}
+		}
+		
+	}
+	
+	
+	
 </style>

@@ -69,7 +69,7 @@ class IndexModel extends HTTP{
 	getOther(success){
 	  let params={
 		  method:"POST",
-		  url:"/app/otheradvert/getList?showPage=1&showPosition=1",
+		  url:"/app/otheradvert/getListNew?showPage=1",
 		  success:success
 	  }
 	  this.request(params)
@@ -113,7 +113,46 @@ class IndexModel extends HTTP{
 		}
 		this.request(params)
 	}
-
+	
+	getAdvertisement(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/banner/getAdvertisement',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+		getSearchComplete(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/goodss/searchCompletion',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getHomeRange(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/appuser/homeRange',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	searchAll(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/goodss/highlightHomeSearchAll',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 
 }
 

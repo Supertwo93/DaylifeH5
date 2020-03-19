@@ -1,64 +1,115 @@
 <template>
 	<view>
-		<block v-for="(item,index) in systemList" :key="index">
-			<view class="title">{{item.time}}</view>
-			<view class="container" v-for="(arr,idx) in item.arr" :key="idx" @tap="toSystemDetail(arr.id)">
-				<view>{{arr.title}}</view>
-				<image src="/static/cut/grayright.png"></image>
-			</view>
+		<block v-if="list.length===0">
+			<image class="noImg" src="https://sgz.wdttsh.com/mini_static/cut/mess_bg.png"></image>
+			<view class="noText">暂无系统消息</view>
 		</block>
-		<!-- <view class="title">三个月前</view> -->
+		<block v-else>
+			<view class="info"  v-for="(item,index) in list" :key="index">
+				<view @tap="deleteItem(item)" class="menu">
+					<view class="icon iconfont icon-iconfontshanchu1"></view>
+				</view>
+				
+				
+				<view @tap="toDetail(item)" class="box" :class="[theIndex==index?'open':oldIndex==index?'close':'']" @touchstart="touchStart(index,$event)" @touchmove="touchMove(index,$event)" @touchend="touchEnd(index,$event)">
+					<view class="title">{{item.title}}</view>
+					<image src="https://sgz.wdttsh.com/mini_static/cut/black-arrow.png"></image>
+				</view>
+			</view>
+			
+		</block>
 	</view>
 </template>
 
+
+
+
 <script>
+	import {UserModel} from '@/common/models/user.js'
+	const usermodel = new UserModel()
 	export default{
 		data(){
 			return{
-				systemList: [
-					{
-						time: '三个月内',
-						arr: [
-							{
-								id: 1,
-								title: "您又有新的同事加你为好友啦"
-							},
-							{
-								id: 2,
-								title: "您又有新的同事加你为好友啦"
-							},
-							{
-								id: 3,
-								title: "您又有新的同事加你为好友啦"
-							}
-						]
-					},
-					{
-						time: '三个月前',
-						arr: [
-							{
-								id: 4,
-								title: "您又有新的同事加你为好友啦"
-							},
-							{
-								id: 5,
-								title: "您又有新的同事加你为好友啦"
-							},
-							{
-								id: 6,
-								title: "您又有新的同事加你为好友啦"
-							}
-						]
-					}
-				]
+				queryInfo:{
+					pageNo:1,
+					pageSize:10
+				},
+				list:[],
+				theIndex:null,
+				oldIndex:null,
+				isStop:false
 			}
 		},
+		onLoad(){
+			this.getList()
+		},
 		methods:{
-			toSystemDetail(e){
+			getList(){
+				usermodel.getSystemMessageList(this.queryInfo,data=>{
+					this.list = data
+					
+				})
+			},
+			toDetail(item){
+				let data = item.content.substring(item.content.indexOf('<div>'),item.content.indexOf('</body'))
 				uni.navigateTo({
-					url: "/pages/msg/systemdetail?id=" + e
+					url:`/pages/msg/systempage?data=${data}`
+				})
+			},
+			touchStart(index,event){
+				if(event.touches.length>1){
+					this.isStop = true
+					return
+				}
+				this.oldIndex = this.theIndex
+				this.theIndex = null
+				
+				this.initXY = [event.touches[0].pageX,event.touches[0].pageY]
+			},
+			touchMove(index,event){
+				if(event.touches.length > 1){
+					this.isStop = true
+					return
+				}
+				let moveX = event.touches[0].pageX - this.initXY[0]
+				let moveY = event.touches[0].pageY - this.initXY[1]
+				
+				if(this.isStop || Math.abs(moveX)<5){
+					return
+				}
+				if(Math.abs(moveY) > Math.abs(moveX)){
+					this.isStop = true
+					return
+				}
+				
+				if(moveX<0){
+					this.theIndex = index
+					this.isStop = true
+				}else if(moveX > 0){
+					if(this.theIndex!=null&&this.oldIndex==this.theIndex){
+						this.oldIndex = index
+						this.theIndex = null
+						this.isStop = true
+						setTimeout(()=>{
+							this.oldIndex = null
+						},150)
+					}
+				}
+			},
+			touchEnd(index,$event){
+				this.isStop = false
+			},
+			deleteItem(item){
+				usermodel.deleteSystemMessage({appusermessageId:item.appusermessageId},data=>{
+					uni.showToast({
+						title:'删除成功',
+						icon:'none',
+						duration:1500
+					})
+					this.getList()
 				})
 			}
+			
 		}
 	}
 </script>
@@ -67,27 +118,89 @@
 page{
 	background-color: #f2f2f2;
 }
-.title{
-	height:63rpx;
-	padding-top: 20rpx;
-	padding-left: 20rpx;
-	font-size:24rpx;
-	font-family:Source Han Sans CN;
-	font-weight:400;
-	color:rgba(160,160,160,1);
+
+.noImg{
+	width:402rpx;
+	height:389rpx;
+	margin-top: 271rpx;
+	margin-left: 174rpx;
 }
-.container{
-	width:750rpx;
-	height:104rpx;
+
+.noText{
+	margin-top: 40rpx;
+	margin-left: 292rpx;
+}
+
+
+.info{
 	display: flex;
-	padding:0 20rpx;
-	justify-content: space-between;
 	align-items: center;
-	background-color: #fff;
-	border-bottom:1rpx solid #f2f2f2;
-	image{
-		width:10rpx;
-		height:20rpx;
+	position:relative;
+	overflow: hidden;
+	z-index:9999;
+	width:750rpx;
+	height: 105rpx;
+	.menu{
+		.icon{
+			color:#fff;
+			font-size:30rpx;
+		}
+		position: absolute;
+		width:20%;
+		height:100%;
+		right:0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: red;
+		color:#fff;
+		z-index:2;
+	}
+	.box{
+		@keyframes showMenu {
+			0% {
+				transform:translateX(0);
+			}
+			100%{
+				transform: translateX(-20%);
+			}
+		}
+		@keyframes closeMenu{
+			0% {
+				transform: translateX(-20%);
+			}
+			100% {
+				transform:translateX(0)
+			}
+		}
+		&.open{
+			animation: showMenu 0.25s linear both;
+		}
+		&.close{
+			animation: closeMenu 0.15s linear both;
+		}
+		background-color: #fff;
+		position: absolute;
+		width:100%;
+		padding:0 20rpx;
+		// border-bottom: 1rpx solid #f2f2f2;
+		height:105rpx;
+		display: flex;
+		z-index: 99;
+		justify-content: space-between;
+		align-items: center;
+		view{
+			color:#1E1E1E;
+		}
+		image{
+			width:12rpx;
+			height:19rpx;
+		}
 	}
 }
+
+
+
+
+
 </style>

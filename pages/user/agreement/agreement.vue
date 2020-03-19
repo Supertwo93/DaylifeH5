@@ -2,20 +2,22 @@
 	<view>
 		<view v-for="(item,index) in agreementList" :key="index">
 			<view class="top">
-				<view class="status" v-if="item.contractState==1">履行中</view>
-				<view class="status" v-if="item.contractState==2">已解约</view>
-				<view class="status" v-if="item.contractState==3">解约中</view>
+				<view class="status" v-if="item.contractState==1">合同履行中</view>
+				<view class="status" v-if="item.contractState==2">合同已解约</view>
+				<view class="status" v-if="item.contractState==3">申请解约中</view>
 				<view class="status" v-if="item.contractState==4&&item.firsttypeId==1">续租中</view>
 				<view class="status" v-if="item.contractState==4&&item.firsttypeId==5">续约中</view>
 				<view v-if="uerInfo.storeId!=item.sellerId" class="icon">乙方</view>
 				<view v-if="uerInfo.storeId==item.sellerId" class="icon partya">甲方</view>
 			</view>
 			<view class="middle" @tap="toDetail(item)">
-				<view class="title">{{item.partyaName}}</view>
-				<view class="default">合同编号：{{item.contractCode}}</view>
-				<view class="default">合同时长：{{item.contractStarttime}}至{{item.contractEndtime}}</view>
-				<view v-if="item.firsttypeId==1" class="default">月租金：￥{{item.rental}}</view>
-				<view v-if="item.firsttypeId==5" class="default">代理费：￥{{item.specsPrice}}</view>
+				<image :src="item.picture.split(',')[0]"></image>
+				<view class="itemDetail">
+					<view class="title">{{item.partyaName}}</view>
+					<view class="default">合同时长：{{item.contractStarttime}}至{{item.contractEndtime}}</view>
+					<view v-if="item.firsttypeId==1" class="price">月租金：￥{{item.rental}}</view>
+					<view v-if="item.firsttypeId==5" class="price">代理费：￥{{item.specsPrice}}</view>
+				</view>
 			</view>
 			<view class="bottom">
 				<view class="time">{{item.createDate}}</view>
@@ -141,10 +143,10 @@ page{
 }
 
 .top{
+	border-radius: 30rpx 30rpx 0 0;
 	margin-top: 20rpx;
 	background-color: #fff;
 	height:100rpx;
-	border-bottom:1rpx solid #DCDCDC;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -152,7 +154,7 @@ page{
 		margin-left: 20rpx;
 		font-size:28rpx;
 		font-weight:400;
-		color:rgba(255,102,0,1);
+		color:#FF6600;
 		line-height:40rpx;
 	}
 	.icon{
@@ -174,41 +176,52 @@ page{
 }
 .middle{
 	background-color: #fff;
-	height:254rpx;
-	border-bottom:1rpx solid #DCDCDC;
+	display: flex;
 	padding-left: 19rpx;
 	padding-top: 29rpx;
-	.title{
-		width:700rpx;
-		font-weight:400;
-		color:rgba(60,60,60,1);
-		line-height:36rpx;
-		overflow : hidden;
-		text-overflow: ellipsis;
-		display: -webkit-box;
-		-webkit-line-clamp: 1;
-		-webkit-box-orient: vertical;
-		word-wrap: break-word;
-		word-break: break-all;
+	image{
+		width:150rpx;
+		height:150rpx;
+		border-radius:10rpx;
+		margin-right:20rpx;
 	}
-	.default{
-		margin-top: 25rpx;
-		font-weight:400;
-		color:rgba(140,140,140,1);
-		line-height:36rpx;
+	.itemDetail{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.title{
+			font-weight:400;
+			font-size:28rpx;
+			color:rgba(30,30,30,1);
+			overflow : hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			word-wrap: break-word;
+			word-break: break-all;
+		}
+		.default{
+			color:rgba(0,138,255,1);
+		}
+		.price{
+			font-size:28rpx;
+			color:rgba(30,30,30,1);
+		}
 	}
 }
 .bottom{
+	border-radius: 0 0 30rpx 30rpx;
 	background-color: #fff;
 	height:100rpx;
 	display: flex;
+	align-items: center;
 	.time{
+		margin-left: 20rpx;
 		width:370rpx;
-		padding-top: 41rpx;
-		padding-left: 19rpx;
-		font-size:22rpx;
+		font-size:26rpx;
 		font-weight:400;
-		color:rgba(160,160,160,1);
+		color:#1E1E1E;
 	}
 	.buttons{
 		width:380rpx;
@@ -222,9 +235,10 @@ page{
 			justify-content: center;
 			width:160rpx;
 			height:60rpx;
+			color:#646464;
 			background:rgba(255,255,255,1);
 			border:1rpx solid rgba(200,200,200,1);
-			border-radius:10rpx;
+			border-radius:30rpx;
 		}
 	}
 }

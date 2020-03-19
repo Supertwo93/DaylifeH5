@@ -31,7 +31,7 @@
 			</view>
 			<view class="my_invite_code">
 				<view>我的邀请码：<text>{{invite_code}}</text></view>
-				<text>复制</text>
+				<text @tap="copy()">复制</text>
 			</view>
 			<view class="invite_nav_box">
 				<view class="invite_item" @tap="toInvitePage()">
@@ -44,7 +44,7 @@
 					<view>佣金明细</view>
 					<text>{{money_num}}笔</text>
 				</view>
-				<view class="invite_item">
+				<view class="invite_item" @tap="toShare">
 					<image src="/static/cut/discenter_icon3.png" mode="widthFix"></image>
 					<view>推广二维码</view>
 					<text>扫描邀请</text>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+	import h5Copy from '@/common/junyi-h5-copy.js'
 	export default{
 		data(){
 			return{
@@ -82,6 +83,22 @@
 			toCommissionPage(){
 				uni.navigateTo({
 					url: '/pages/user/distribution/commission'
+				})
+			},
+			copy(){
+				let content = this.invite_code
+				const result = h5Copy(content)
+				if(result===true){
+					uni.showToast({
+						title:'复制成功',
+						duration:1500,
+						icon:'none'
+					})
+				}
+			},
+			toShare(){
+				uni.navigateTo({
+					url:'/pages/user/share/share'
 				})
 			}
 		}

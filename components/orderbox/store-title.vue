@@ -3,7 +3,7 @@
 		<view class="store">
 			<image class="storeIcon" src="/static/cut/dpicon.png"></image>
 			<view class="storetitle">{{title}}</view>
-			<image class="arrow" src="/static/cut/grayright.png"></image>
+			<image class="arrow" src="/static/cut/black-arrow.png"></image>
 		</view>
 		<view class="status">{{typeText[status]}}</view>
 	</view>
@@ -70,16 +70,18 @@ export default {
 		align-items: center;
 		.storeIcon{
 			width:26rpx;
-			height:23rpx;
+			height:25rpx;
 		}
 		.storetitle{
+			color:#1E1E1E;
+			font-weight: 500;
 			font-size: 26rpx;
 			margin-left: 10rpx;
 		}
 		.arrow{
 			margin-left: 10rpx;
-			width:8.5rpx;
-			height:16.5rpx;
+			width:10rpx;
+			height:17rpx;
 		}
 	}
 	.status{

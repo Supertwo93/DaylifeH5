@@ -83,15 +83,15 @@ export default {
 			// 	mask:true
 			// });
 			loginModel.getUpdatePassword(phoneNumber,verificationCode,loginPassword,(res)=>{
-				console.log(res)
-				uni.setStorage({
-					key:"UserInfo",
-					data:res,
-					success:function(){			
-						// uni.switchTab({
-						//     url: '/pages/index/index'
-						// });
-					}
+				uni.showToast({
+					title:'修改密码成功',
+					icon:'none',
+					duration:1500
+				})
+				setTimeout(()=>{
+					uni.navigateBack({
+						delta:2
+					},1500)
 				})
 			})	
 		},

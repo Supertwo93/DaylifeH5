@@ -210,7 +210,7 @@ export default{
 	}
 	.number{
 		position: absolute;
-		top:990rpx;
+		top:82%;
 		left:236rpx;
 		font-size:34rpx;
 		font-weight:500;
@@ -287,7 +287,7 @@ export default{
 	// height: 250rpx;
 	padding: 20rpx;
 	position: absolute;
-	top:650rpx;
+	top:58%;
 	left: 50%;
 	transform: translateX(-50%);
 	display: inline-block;
@@ -299,7 +299,7 @@ export default{
 }
 .body-font{
 	position: absolute;
-	top:1050rpx;
+	top:90%;
 	left: 0;
 	width: 100%;
 	height: 80rpx;

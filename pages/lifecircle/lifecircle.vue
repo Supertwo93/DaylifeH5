@@ -113,14 +113,14 @@
 				scrollTop:'',
 				userIcon:'',
 				userName:'',
-				userId:''
+				userId:'',
 			}
 		},
 		onLoad(options){
 			this.token = options.token
+			
 		},
 		onShow() {
-			console.log(111)
 			this.getUserInfo()
 			this.requestData()
 		},
@@ -322,6 +322,7 @@
 		background-color: #f2f2f2;
 		padding-top:490rpx;
 	}
+	
 	.navbar{
 		position: absolute;
 		top:0;
@@ -472,6 +473,54 @@
 				}
 			}
 			
+		}
+	}
+	
+	
+	@media (prefers-color-scheme: dark) { 
+		page{
+			background-color: #141414;
+		}
+		
+		.navbar{
+			background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
+		}
+		
+		.tabbar{
+			background-color: #313131;
+			.tab{
+				color:#fff;
+			}
+		}
+		
+		.list{
+			background-color: #2D2D2D;
+			.user{
+				.info{
+					.nickName{
+						color:#FFF;
+					}
+					.gray{
+						color:#A0A0A0;
+					}
+				}
+			}
+			.content{
+				color:#FFFFFF;
+			}
+			.bottom{
+				.lf{
+					color:#A0A0A0;
+				}
+				.rt{
+					view{
+						color:#fff;
+						&.on{
+							color:#FF6600;
+						}
+					}
+				}
+			}
 		}
 	}
 </style>

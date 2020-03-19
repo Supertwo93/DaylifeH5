@@ -14,7 +14,7 @@
 			
 			<block v-if="provideList.length!=0">
 				<block v-for="(row,index) in provideList" :key="index">
-					<view class="item">
+					<view class="item" @tap="toDetail(row)">
 						<view class="image">
 							<image :src="row.smallPic"></image>
 						</view>
@@ -28,8 +28,8 @@
 							</view>
 						</view>
 						
-						<view class="like" @tap="delCollectGoods(row)">
-							<image src="/static/cut/collected.png"></image>
+						<view class="like">
+							<image @tap.stop="delCollectGoods(row)" src="/static/cut/collected.png"></image>
 						</view>
 					</view>
 				</block>
@@ -45,7 +45,7 @@
 			</block>
 			<block v-if="storeList.length!=0">
 				<block v-for="(item,index) in storeList" :key="index">
-					<view class="row">
+					<view class="row" @tap="toStore(item)">
 						<view class="storeImage">
 							<image :src="item.logoPic"></image>
 						</view>
@@ -62,8 +62,8 @@
 								<view>评分: {{item.mainScore}}</view>
 							</view>
 						</view>
-						<view class="like" @tap="delCollectShop(item.sellerId)">
-							<image src="/static/cut/collected.png"></image>
+						<view class="like" >
+							<image @tap.stop="delCollectShop(item.sellerId)" src="/static/cut/collected.png"></image>
 						</view>
 					</view>
 				</block>
@@ -79,7 +79,7 @@
 			</block>
 			<block v-if="vipcardList.length!=0">
 				<block v-for="(row,index) in vipcardList" :key="index">
-					<view class="item">
+					<view class="item" @tap="toVipDetail(row)">
 						<view class="image">
 							<image :src="row.firstPictures"></image>
 						</view>
@@ -99,8 +99,8 @@
 							</view>
 						</view>
 						
-						<view class="like" @tap="delCollectCard(row.cardId)">
-							<image src="/static/cut/collected.png"></image>
+						<view class="like">
+							<image @tap.stop="delCollectCard(row.cardId)" src="/static/cut/collected.png"></image>
 						</view>
 					</view>
 				</block>
@@ -205,6 +205,41 @@ export default{
 		},
 		showType(tbIndex){
 			this.tabbarIndex = tbIndex;
+		},
+				toDetail(item){
+			if(item.isMarketable==0){
+				uni.showToast({
+					icon:'none',
+					duration:1500,
+					title:'该商品已下架'
+				})
+				return 
+			}
+			
+			
+			if(item.goodsFirsttype!=5&&item.goodsFirsttype!=1){
+				uni.navigateTo({
+					url:`/pages/provide/detail?sellerId=${item.sellerId}&id=${item.goodsId}&type=${item.goodsFirsttype}`
+				})
+			}else if(item.goodsFirsttype==1){
+				uni.navigateTo({
+					url:'/pages/house/housedetail?data='+item.houseId
+				})
+			}else if(item.goodsFirsttype==5){
+				uni.navigateTo({
+					url:'/pages/finance/financedetail?financeId=' + item.goodsId + '&code=' + item.financeCode + '&sellerId=' + item.sellerId
+				})
+			}
+		},
+		toStore(row){
+			uni.navigateTo({
+				url:`/pages/shop/theStore?sellerId=${row.sellerId}&type=${row.firstTypeId}`
+			})
+		},	
+		toVipDetail(row){
+			uni.navigateTo({
+				url:'/pages/VIPCard/vipdetail?id=' + row.cardId + '&sellerId=' + row.sellerId
+			})
 		}
 	}
 }

@@ -175,6 +175,15 @@ export default{
 	onShow() {
 		providemodel.getItemDetail({goodsId:this.id},(data)=>{
 			this.data = data
+			if(this.data.itemList.length==0){
+				let array = []
+				let obj = {}
+				obj.image = ''
+				obj.price = ''
+				array.push(obj)
+				this.data.itemList = array
+			}
+			console.log(this.data)
 			this.skuId = data.goods.defaultItemId;
 			let image = data.goodsDesc.itemImages
 			image = image.split(',')
@@ -473,7 +482,9 @@ page{
 	}
 }
 
+
 .popBox{
+	border-radius: 20rpx 20rpx 0 0;
 	z-index:9999;
 	padding:20rpx;
 	// padding-bottom:110rpx;

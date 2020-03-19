@@ -2,7 +2,7 @@
 	<view class="box">
 		<view class="top">
 			<view class="price"><text>￥{{price}}</text></view>
-			<image class="share" src="/static/cut/sharecut.png"></image>
+			<!-- <image class="share" src="/static/cut/sharecut.png"></image> -->
 		</view>
 		<view class="middle">
 			{{title}}

@@ -107,6 +107,14 @@
 		font-size: 26rpx;
 		color: #3C3C3C;
 	}
+	
+	::-webkit-scrollbar{
+		width:0;
+		height: 0;
+		background-color: transparent;
+	}
+	
+	
 	//文字省略
 	.ellipsis{
 		overflow: hidden;
@@ -292,6 +300,7 @@
 	
 	//首页筛选样式
 	.indexChooseType{
+		border-radius:0 0 30rpx 30rpx;
 		height:84rpx;
 		background-color: #fff;
 		padding: 0 20rpx;
@@ -299,22 +308,31 @@
 		justify-content: space-between;
 		align-items: center;
 		.title{
-			padding-left: 6rpx;
-			border-left: 8rpx solid #FF6600;
-			font-size:30rpx;
-			font-weight:400;
-			color:rgba(60,60,60,1);
+			padding-left:10rpx;
+			display: flex;
+			align-items: center;
+			.title-border{
+				margin-right: 13rpx;
+				width:8rpx;
+				height:30rpx;
+				background:rgba(255,102,0,1);
+			}
+			.title-content{
+				font-size:34rpx;
+				font-weight:bold;
+				color:rgba(30,30,30,1);
+			}
 		}
 		.icon{
 			display: flex;
 			align-items: center;
 			font-size:28rpx;
 			font-weight:400;
-			color:rgba(120,120,120,1);
+			color:#ff6600;
 			image{
 				margin-left: 6rpx;
-				width:24rpx;
-				height:26rpx;
+				width:18rpx;
+				height:12rpx;
 			}
 		}
 	}

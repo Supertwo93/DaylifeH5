@@ -3,9 +3,12 @@
 		<bavigationbar :firsttype="type"></bavigationbar>
 		<Swiper :swiperImage="swiperImg"></Swiper>
 		<view class="chooseType">
-			<view class="title">{{position}}服务</view>
+			<view class="title">
+				<view class="title-border"></view>
+				<view class="title-content">{{position}}服务</view>
+			</view>
 			<view class="icon" @tap="pop()">
-				筛选<image src="/static/cut/filter_icon.png"></image>
+				筛选<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
 			</view>
 		</view>
 		<block v-if="type==8||type==10">
@@ -66,7 +69,7 @@ export default {
 			}	
 		},
 		fixOne(value){
-			return parseInt(value/1000).toFixed(1) + 'km'
+			return parseInt(value/1000).toFixed(1)
 		}
 	},
 	computed:{
@@ -265,24 +268,36 @@ page{
 	height:84rpx;
 	background-color: #fff;
 	padding: 0 20rpx;
+	border-radius: 0 0 30rpx 30rpx;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	.title{
-		border-left: 8rpx solid #FF6600;
-		font-size:28rpx;
-		font-weight:400;
-		color:rgba(60,60,60,1);
+		padding-left:10rpx;
+		display: flex;
+		align-items: center;
+		.title-border{
+			margin-right: 13rpx;
+			width:8rpx;
+			height:30rpx;
+			background:rgba(255,102,0,1);
+		}
+		.title-content{
+			font-size:34rpx;
+			font-weight:bold;
+			color:rgba(30,30,30,1);
+		}
 	}
 	.icon{
 		display: flex;
 		align-items: center;
 		font-size:28rpx;
 		font-weight:400;
-		color:rgba(120,120,120,1);
+		color:#ff6600;
 		image{
-			width:24rpx;
-			height:26rpx;
+			margin-left: 10rpx;
+			width:18rpx;
+			height:12rpx;
 		}
 	}
 }

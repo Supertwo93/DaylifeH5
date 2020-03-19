@@ -6,11 +6,11 @@
 		<view class="search-keyword" @touchstart="blur">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>
 				<view class="keyword-entry" hover-class="keyword-entry-tap" v-for="row in keywordList" :key="row.keyword">
-					<view class="keyword-text" @tap="doSearch(row.keyword)">
+					<view class="keyword-text" @tap="doTextSearch(row.keyword)">
 						<rich-text :nodes="row.htmlStr"></rich-text>
 					</view>
 					<view class="keyword-img" @tap="setkeyword(row)">
-						<image src="/static/HM-search/back.png"></image>
+						<!-- <image src="/static/HM-search/back.png"></image> -->
 					</view>
 				</view>
 			</scroll-view>
@@ -46,7 +46,9 @@
 </template>
 
 <script>
-	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
+	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue'
+	import {IndexModel} from "@/common/models/index.js"
+	const indexmodel = new IndexModel()
 	export default {
 		data() {
 			return {
@@ -82,7 +84,7 @@
 			//加载默认搜索关键字
 			loadDefaultKeyword() {
 				//定义默认搜索关键字，可以自己实现ajax请求数据再赋值,用户未输入时，以水印方式显示在输入框，直接不输入内容搜索会搜索默认关键字
-				this.defaultKeyword = "默认关键字";
+				this.defaultKeyword = "生活服务";
 			},
 			//加载历史搜索,自动读取本地Storage
 			loadOldKeyword() {
@@ -104,18 +106,21 @@
 				//兼容引入组件时传入参数情况
 				var keyword = event.detail?event.detail.value:event;
 				if (!keyword) {
-					this.keywordList = [];
-					this.isShowKeywordList = false;
-					return;
+					this.keywordList = []
+					this.isShowKeywordList = false
+					return
 				}
-				this.isShowKeywordList = true;
+				this.isShowKeywordList = true
 				//以下示例截取淘宝的关键字，请替换成你的接口
-				uni.request({
-					url: 'https://suggest.taobao.com/sug?code=utf-8&q=' + keyword, //仅为示例
-					success: (res) => {
-						this.keywordList = this.drawCorrelativeKeyword(res.data.result, keyword);
-					}
-				});
+				// uni.request({
+				// 	url: 'https://suggest.taobao.com/sug?code=utf-8&q=' + keyword, //仅为示例
+				// 	success: (res) => {
+				// 		this.keywordList = this.drawCorrelativeKeyword(res.data.result, keyword);
+				// 	}
+				// })
+				indexmodel.getSearchComplete({title:keyword,firstTypeId:this.type},data=>{
+					this.keywordList = this.drawCorrelativeKeyword(data,keyword)
+				})
 			},
 			//高亮关键字
 			drawCorrelativeKeyword(keywords, keyword) {
@@ -124,19 +129,19 @@
 				for (var i = 0; i < len; i++) {
 					var row = keywords[i];
 					//定义高亮#9f9f9f
-					var html = row[0].replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
-					html = '<div>' + html + '</div>';
+					var html = row.replace(keyword, "<span style='color: #1e1e1e;'>" + keyword + "</span>");
+					html = "<div style='color:#a0a0a0;'>" + html + '</div>'
 					var tmpObj = {
-						keyword: row[0],
+						keyword: row,
 						htmlStr: html
 					};
 					keywordArr.push(tmpObj)
 				}
-				return keywordArr;
+				return keywordArr
 			},
 			//顶置关键字
 			setkeyword(data) {
-				this.keyword = data.keyword;
+				this.keyword = data.keyword
 			},
 			//清除历史搜索
 			oldDelete() {
@@ -165,9 +170,17 @@
 				this.keyword = key;
 				this.saveKeyword(key); //保存为历史 
 				uni.navigateTo({
-					url:`searchpage?type=${this.type}&key=${key}`
+					url:`searchpage?type=${this.type}&key=${key}&text=0`
 				})
 				
+			},
+			doTextSearch(key){
+				key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
+				this.keyword = key;
+				this.saveKeyword(key); //保存为历史 
+				uni.navigateTo({
+					url:`searchpage?type=${this.type}&key=${key}&text=1`
+				})
 			},
 			//保存关键字到历史记录
 			saveKeyword(keyword) {

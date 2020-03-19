@@ -571,7 +571,7 @@
 			}
 			
 			&.active,&:active{
-				color: #42b983;
+				color: #FF6600;
 				background-color: #fff;
 				border-left: 6rpx solid #ff6600;
 			}

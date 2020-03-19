@@ -34,7 +34,9 @@
 		
 		<view class='upTitle'>上传凭证（限3张）</view>
 		<view class="upload">
-			<image :src="src" @click="uploadPic"></image>
+			<block v-for="(item,index) in image" :key="index">
+				<image :src="item" @click="uploadPic(index)"></image>
+			</block>
 		</view>
 		
 		<view class="submit" @tap="submit">提交申请</view>
@@ -59,9 +61,8 @@
 				index2:0,
 				applyReason:'',
 				backType:'',
-				image:[],
+				image:['https://sgz.wdttsh.com/mini_static/cut/upload_photo.png'],
 				applyExplain:'',
-				src:'../../static/cut/upload_photo.png'
 			}
 		},
 		onLoad(options){
@@ -75,27 +76,31 @@
 			bindPickerChange2: function(e) {
 				this.index2 = e.target.value
 			},
-			uploadPic(){
-				uni.chooseImage({
-					count:3,
-					success:(res)=>{
-						for(let item of res.tempFilePaths){
-							uni.uploadFile({
-								url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
-								filePath: item,
-								name: 'img',
-								success: (uploadFileRes) => {
-									let img = uploadFileRes.data;
-									img = JSON.parse(img).data
-									this.image.push(img)
-								}
-							})
+			uploadPic(index){
+				if(index == 0){
+					uni.chooseImage({
+						count:3,
+						success:(res)=>{
+							for(let item of res.tempFilePaths){
+								uni.uploadFile({
+									url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+									filePath: item,
+									name: 'img',
+									success: (uploadFileRes) => {
+										let img = uploadFileRes.data;
+										img = JSON.parse(img).data
+										if(this.image.length==4){
+											return
+										}else{
+											this.image =  this.image.concat(img)
+										}
+										
+									}
+								})
+							}
 						}
-						
-					}
-				})
-				this.src = this.image[0]
-				console.log(this.image)
+					})
+				}	
 			},
 			submit(){
 				let req = {}
@@ -225,7 +230,6 @@ page{
 
 .upload{
 	width:100%;
-	height:260rpx;
 	background-color: #fff;
 	image{
 		width:200rpx;

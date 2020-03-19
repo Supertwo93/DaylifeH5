@@ -12,19 +12,25 @@
 		<view v-for="(item,index) in list" :key="index" class="item" @tap="toStore(item)">
 			<image class="storeImg" :src="item.logoPic"></image>
 			<view class="content">
-				<view class="topTitle">
-					<view class="title">{{item.nickName}}</view>
-					<view class="distance">{{item.distance|disFilter}}km</view>
-				</view>
+				<view class="title">{{item.nickName}}</view>
 				<view class="middle">
-					<image src="/static/cut/star_on.png"></image>
-					<view>评分{{item.mainScore.toFixed(1)}}</view>
+					<view class="point">
+						<image src="/static/cut/comment-star.png"></image>
+						<view>{{item.mainScore.toFixed(1)}}</view>
+					</view>
+					<view class="sell">
+						总售{{item.monthlySale}}
+					</view>
+					<view class="dis">{{item.distance|fixOne}}km</view>
 				</view>
 				<view class="bottom">
-					<view class="gray">月售{{item.monthlySale}}</view>
-					<view class="gray">商品数量{{item.goodsCount}}</view>
-					<view class="toStore" @tap="toStore(item)">
-						<view>进店看看</view>
+					<view class="tags">
+						<view v-if="item.firstTypeId==8&&item.deliveryFee==0" class="y-tag">免费配送</view>
+						<view class="tag">商品{{item.goodsCount}}</view>
+						<view v-if="item.firstTypeId==8" class="tag">商品{{item.startingAndDeliveringFee}}</view>
+					</view>
+					<view class="in">
+						<view>进店</view>
 						<image src="/static/cut/right_orange.png"></image>
 					</view>
 				</view>
@@ -45,7 +51,10 @@
 		filters: {
 			disFilter:(value)=> {
 				return (value/1000).toFixed(2)
-			}
+			},
+			fixOne(value){
+				return parseInt(value/1000).toFixed(1)
+			},
 		},
 		components: {
 			uniLoadMore
@@ -132,10 +141,11 @@
 	}
 	
 	.item{
-		height:230rpx;
+		width:750rpx;
+		height:190rpx;
 		background-color: #fff;
 		margin-bottom: 10rpx;
-		padding:30rpx 20rpx;
+		padding:20rpx;
 		display: flex;
 		.storeImg{
 			width:150rpx;
@@ -144,45 +154,78 @@
 			margin-right: 20rpx;
 		}
 		.content{
-			.topTitle{
-				width:540rpx;
-				display: flex;
-				justify-content: space-between;
-				.title{
-					font-size:28rpx;
-					color:#1E1E1E;
-				}
+			width:520rpx;
+			height:150rpx;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			margin-left: 20rpx;
+			.title{
+				font-size:30rpx;
+				color:#1e1e1e;
+				overflow: hidden;
+				-o-text-overflow: ellipsis;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+				word-wrap: break-word;
+				word-break: break-all;
 			}
 			.middle{
-				margin-top: 20rpx;
 				display: flex;
-				height:30rpx;
+				justify-content: space-between;
 				align-items: center;
-				image{
-					width:25rpx;
-					height:23rpx;
-				}
-				view{
-					margin-left: 8rpx;
-					color:#646464;
-					font-size:24rpx;
+				.point{
+					display: flex;
+					align-items: center;
+					image{
+						margin-right: 5rpx;
+						width:25rpx;
+						height:25rpx;
+					}
+					view{
+						font-size:30rpx;
+						color:#FFC600;
+						font-weight:700;
+					}
 				}
 			}
 			.bottom{
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				margin-top: 20rpx;
-				.toStore{
+				.tags{
+					display: flex;
+					.tag{
+						margin-right: 10rpx;
+						font-size: 22rpx;
+						height: 30rpx;
+						line-height: 30rpx;
+						padding: 0 5rpx;
+						color: #a0a0a0;
+						border: 1rpx solid #a0a0a0;
+						border-radius: 6rpx;
+					}
+					.y-tag{
+						margin-right: 10rpx;
+						font-size: 22rpx;
+						height: 30rpx;
+						line-height: 30rpx;
+						padding: 0 5rpx;
+						color: #ff6600;
+						border: 1rpx solid #ff6600;
+						border-radius: 6rpx;
+					}
+				}
+				.in{
 					display: flex;
 					align-items: center;
-					view{
-						color:#FF6600;
-						margin-right: 5rpx;
-					}
+					color:#ff6600;
 					image{
-						width:10rpx;
-						height:20rpx;
+						margin-left: 5rpx;
+						width:8rpx;
+						height:16rpx;
 					}
 				}
 			}

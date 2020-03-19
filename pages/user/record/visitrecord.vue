@@ -132,6 +132,7 @@ export default{
 		touchEnd(index,$event){
 			this.isStop = false
 		}
+		
 	}
 }
 </script>

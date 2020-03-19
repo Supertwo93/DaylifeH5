@@ -16,7 +16,7 @@
 			</view>
 		</view>
 		
-		<baidu-map :style="{height:mapHeight}" class="map" :center="{lng: 114.24779, lat: 22.71991}" :zoom="10">
+		<baidu-map :style="{height:mapHeight}" class="map" :center="{lng: 114.24779, lat: 22.71991}" :zoom="15">
 			<block v-for="(item,index) in data" :key="index">
 				<bm-marker :position="{lng:  item.latitudeLongitude.split(',')[0], lat: item.latitudeLongitude.split(',')[1]}" :dragging="false" @click="infoWindowOpen(item)" :icon="{url: require('../../static/cut/mapIcon.png'),opts:{imageSize:{width: 43, height: 52}}, size: {width: 43, height: 52}}">
 					<bm-info-window :position="{lng:item.latitudeLongitude.split(',')[0], lat: item.latitudeLongitude.split(',')[1]}" :show="item.showFlag" @close="infoWindowClose(item)" @open="infoWindowOpen(item)">

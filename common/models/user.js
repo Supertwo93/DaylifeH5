@@ -101,6 +101,27 @@ class UserModel extends HTTP{
 		this.request(params)
 	}
    
+   
+   getSystemMessageList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appusermessage/getSystemMessageList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	deleteSystemMessage(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/appusermessage/delete',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+   
    // 用户积分流水
    getStoreflow(pageNo,success){
      let data={pageNo:pageNo,pageSize:10}
@@ -460,6 +481,29 @@ class UserModel extends HTTP{
 		let params = {
 			method:'POST',
 			url:'/app/business/queryReceiptRecord',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	
+	//添加意见反馈
+	addFeeBack(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/feedBack/add',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//获取用户反馈列表
+	getFeedBackList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/tbFeedbackReply/getList ',
 			data:data,
 			success:success
 		}

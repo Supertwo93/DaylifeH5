@@ -27,14 +27,17 @@
 					<view class="distance">{{item.distance|disFilter}}km</view>
 				</view>
 				<view class="middle">
-					<image src="/static/cut/star_on.png"></image>
-					<view>评分{{item.mainScore.toFixed(1)}}</view>
+					<image src="/static/cut/store-star.png"></image>
+					<view>{{item.mainScore.toFixed(1)}}</view>
+					<text>总售{{item.monthlySale}}</text>
 				</view>
 				<view class="bottom">
-					<view class="gray">月售{{item.monthlySale}}</view>
-					<view class="gray">商品数量{{item.goodsCount}}</view>
+					<view class="yellowBox" v-if="item.deliveryFee==0">免费配送</view>
+					<view class="grayBox" v-else>配送￥{{item.deliveryFee}}</view>
+					<view class="grayBox">起送{{item.startingAndDeliveringFee}}</view>
+					<view class="grayBox">商品{{item.goodsCount}}</view>
 					<view class="toStore">
-						<view>进店看看</view>
+						<view>进店</view>
 						<image src="/static/cut/right_orange.png"></image>
 					</view>
 				</view>
@@ -186,7 +189,7 @@
 				})
 			},
 			toNearbyMap(){
-				indexmodel.findAllSeller({firsttypeId:8,pageSize:1000},data=>{
+				indexmodel.findAllSeller(this.queryInfo,data=>{
 					let allSeller = data
 					for(let i of allSeller){
 						i.showFlag = false
@@ -312,6 +315,13 @@
 					font-size:32rpx;
 					color:#1E1E1E;
 					font-weight: bolder;
+					overflow: hidden;
+					display: -webkit-box;
+					text-overflow: ellipsis;
+					-webkit-line-clamp:1;
+					-webkit-box-orient:vertical;
+					word-wrap:break-word;
+					word-break: break-all;
 				}
 			}
 			.middle{
@@ -320,13 +330,18 @@
 				height:30rpx;
 				align-items: center;
 				image{
-					width:25rpx;
-					height:23rpx;
+					width:24rpx;
+					height:25rpx;
 				}
 				view{
 					margin-left: 8rpx;
 					color:#646464;
-					font-size:24rpx;
+					font-weight:bolder;
+					color:rgba(255,198,0,1);
+				}
+				text{
+					color:#505050;
+					margin-left: 19rpx;
 				}
 			}
 			.bottom{
@@ -334,6 +349,20 @@
 				align-items: center;
 				justify-content: space-between;
 				margin-top: 20rpx;
+				.yellowBox{
+					padding:0rpx 5rpx;
+					border:1px solid rgba(255,102,0,1);
+					font-size:22rpx;
+					border-radius: 6rpx;
+					color:rgba(255,102,0,1);
+				}
+				.grayBox{
+					padding: 0 5rpx;
+					border:1px solid  rgba(160,160,160,1);
+					font-size:22rpx;
+					border-radius: 6rpx;
+					color:#8C8C8C;
+				}
 				.toStore{
 					display: flex;
 					align-items: center;
