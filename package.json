@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cos-js-sdk-v5": "^0.5.22",
+    "cos-js-sdk-v5": "^1.4.6",
     "exif-js": "^2.3.0",
     "tim-js-sdk": "^2.4.0",
     "vue-baidu-map": "^0.21.22",
